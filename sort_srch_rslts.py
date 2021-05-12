@@ -19,47 +19,97 @@ from typing import Dict, List
 import data_type
 
 
-def time_sort(data: List[tuple], recipe_data: Dict[str, list],
-              max_mins: int, dec_ord: bool = False) -> List[tuple]:
+def ingrdnt_sort(data: Dict[str, list], user_ingrdnts: list, graph: data_type.Graph) -> List[tuple]:
+    """Return a list of tuples containing the recipe ids and other attributes of recipes
+     from data sorted in decreasing order of number of ingredients used from user_ingrdnts.
+
+     NOTE: The recipes returned may contain ingredients extra than user_ingredients.
+
+     Step 1 in the recipe search algorithm.
+    """
+    recipe_occurence = {}
+    sorted_recipes = []
+
+    for item in user_ingrdnts:
+        neighbours = graph.get_neighbours(item.strip())  # neighbours = set of recipe ids
+
+        assert all([x in graph.get_all_vertices('recipe') for x in neighbours])
+
+        for recipe in neighbours:
+            if recipe in recipe_occurence:
+                recipe_occurence[recipe] += 1
+            else:
+                recipe_occurence[recipe] = 1
+
+    sorted_recipe_ids = sorted(recipe_occurence.items(), key=lambda x: x[1], reverse=True)
+
+    for item in sorted_recipe_ids:
+        sorted_recipes.append((item[0], data[item[0]]))
+        # use list instead of dictionary to maintain sort order
+
+    return sorted_recipes[:100]
+
+
+def time_bound(data: List[tuple], max_mins: int) -> List[tuple]:
+    """Return a list of recipes from data which have a total cooking time less than or equal to
+    max_mins.
+
+    Step 2 in the recipe search algorithm. Uses output from the function ingrdnt_sort as input.
+    """
+    if max_mins == 0:
+        return data
+
+    else:
+        sorted_recipes = []
+
+        for item in data:
+            total_time = item[1][6]
+
+            if total_time != "X":
+                total_time = total_time.replace(" ", "")  # remove the whitespace
+                day, hour, minute = _split_time(total_time)
+
+                minutes = (24 * 60 * int(day)) + (60 * int(hour)) + int(minute)
+
+                if minutes <= max_mins:
+                    sorted_recipes.append(item)
+
+        return sorted_recipes
+
+
+def time_sort(data: List[tuple], dec_ord: bool = False) -> List[tuple]:
     """Return a list of recipes from data sorted in increasing or decreasing order
     of the total time of the recipes depending on dec_ord. The total time of the recipes
     returned is less than the maximum minutes max_mins.
 
     If total time of a recipe is not available, do not include it in the return value.
+
+    Step 3 in the recipe search algorithm. Uses output from the function time_bound as input.
     """
     times = {}
     sorted_recipes = []
-    # data_copy = data.copy()  # to not mutate the input
 
     for item in data:  # item = (recipe id, other attributes)
         total_time = item[1][6]
-        total_time = total_time.replace(" ", "")  # remove the whitespace
 
         if total_time != "X":
+            total_time = total_time.replace(" ", "")  # remove the whitespace
             day, hour, minute = _split_time(total_time)
 
             minutes = (24 * 60 * int(day)) + (60 * int(hour)) + int(minute)
-            times[item[0]] = minutes  # convert time to mins
-
-        else:
-            data.remove(item)
+            times[item[0]] = (minutes, item[1])  # convert time to mins
 
     # sort by value
     if dec_ord:
-        sorted_times = sorted(times.items(), key=lambda x: x[1], reverse=True)
+        sorted_times = sorted(times.items(), key=lambda x: x[1][0], reverse=True)
     else:
-        sorted_times = sorted(times.items(), key=lambda x: x[1])
+        sorted_times = sorted(times.items(), key=lambda x: x[1][0])
 
-    if max_mins == 0:
-        for item in sorted_times:
-            sorted_recipes.append((item[0], recipe_data[item[0]]))
-    else:
-        for item in sorted_times:
-            if item[1] <= max_mins:
-                sorted_recipes.append((item[0], recipe_data[item[0]]))
-                # use list instead of dictionary to maintain sort order
+    for item in sorted_times:
+        sorted_recipes.append((item[0], item[1][1]))
+        # use list instead of dictionary to maintain sort order
 
-    return sorted_recipes[:100]
+    return sorted_recipes
 
 
 def _split_time(time: str) -> list[str]:
@@ -91,33 +141,3 @@ def _split_time(time: str) -> list[str]:
         time_lst[2] = "0"
 
     return time_lst
-
-
-def ingrdnt_sort(data: Dict[str, list], user_ingrdnts: list, graph: data_type.Graph) -> List[tuple]:
-    """Return a list of tuples containing the recipe ids and other attributes of recipes
-     from data sorted in decreasing order of number of ingredients used from user_ingrdnts.
-
-     NOTE: The recipes returned may contain ingredients extra than user_ingredients.
-    """
-    recipe_occurence = {}
-    sorted_recipes = []
-
-    for item in user_ingrdnts:
-        neighbours = graph.get_neighbours(item.strip())  # neighbours = set of recipe ids
-
-        assert all([x in graph.get_all_vertices('recipe') for x in neighbours])
-
-        for recipe in neighbours:
-            if recipe in recipe_occurence:
-                recipe_occurence[recipe] += 1
-            else:
-                recipe_occurence[recipe] = 1
-
-    sorted_recipe_ids = sorted(recipe_occurence.items(), key=lambda x: x[1], reverse=True)
-
-    for item in sorted_recipe_ids:
-        sorted_recipes.append((item[0], data[item[0]]))
-        # use list instead of dictionary to maintain sort order
-
-    return sorted_recipes[:100]
-

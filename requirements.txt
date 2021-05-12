@@ -6,9 +6,6 @@ hypothesis
 pytest
 python-ta~=1.6.3
 
-# Data reading
-csv
-
 # Graphics and data visualization
 plotly
 pygame~=2.0.1

@@ -1,4 +1,3 @@
-test
 """CSC111 Winter 2021 Project Phase 2: Final Submission, Recipes Results Program Window (3)
 
 Description
@@ -16,8 +15,9 @@ please consult our Course Syllabus.
 This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, \
-    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QComboBox
-from PyQt5.QtCore import Qt
+    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QComboBox, QApplication, \
+    QHBoxLayout
+from PyQt5.QtCore import Qt, QRect
 from PyQt5.QtGui import QFont, QIcon
 import data_reading
 import sort_srch_rslts
@@ -45,19 +45,37 @@ class RecipesDialogue(QDialog, QWidget):
         self.lbl_title.setFont(QFont('Georgia', 17, QFont.Bold))
         self.lbl_title.setStyleSheet('color: rgb(210, 146, 68)')
         self.lbl_title.setFixedSize(475, 40)
-        self.lbl_title.move(125, 40)
+        self.lbl_title.move(125, 20)
 
         self.lbl_type = QLabel("Type a recipe name to view:", self)
         self.lbl_type.setFont(QFont('Georgia', 12, QFont.Bold))
         self.lbl_type.setStyleSheet('color: rgb(211, 104, 80)')
         self.lbl_type.setFixedSize(200, 25)
 
+        combos = QVBoxLayout()
+        self.setLayout(combos)
+        # combos.setGeometry(QRect(200, 200, 300, 300))
+        combos.setContentsMargins(600, 10, 10, 400)
+
+        self.combo_type = QComboBox()
+        self.combo_type.addItem('Time', ['Ascending', 'Descending'])    # index 0
+        self.combo_type.addItem('Ingredients', [])  # index 1
+        combos.addWidget(self.combo_type)
+        self.combo_type.move(600, 100)
+
+        self.combo_option = QComboBox()
+        combos.addWidget(self.combo_option)
+        self.combo_option.move(600, 150)
+
+        self.combo_type.currentIndexChanged.connect(self.update_combo_option)
+        self.update_combo_option(self.combo_type.currentIndex())
+
         # Getting all the recipes needed
         self.data = data_reading.read_recipes(data_reading.RECIPES_FILE)
         data_reading.clean_ingredients(self.data)
         self.graph = data_type.load_graph("data/clean_recipes.csv")
         ingrdnt_sorted_recipes = sort_srch_rslts.ingrdnt_sort(self.data, self.user_ingredients,
-                                                           self.graph)
+                                                              self.graph)
         self.sorted_recipes = sort_srch_rslts.time_bound(ingrdnt_sorted_recipes, self.time)
 
         # Displays all the sorted recipes in a list
@@ -95,7 +113,7 @@ class RecipesDialogue(QDialog, QWidget):
         completer.setCaseSensitivity(Qt.CaseInsensitive)
 
         self.recipe_of_choice.setCompleter(completer)
-        self.recipe_of_choice.move(250, self.height - 170)
+        self.recipe_of_choice.move(250, self.height - 195)
         self.recipe_of_choice.setFixedSize(200, 30)
         self.recipe_of_choice.setFont(QFont('Georgia', 12))
         self.recipe_of_choice.setStyleSheet('color: rgb(35, 87, 77)')
@@ -103,17 +121,34 @@ class RecipesDialogue(QDialog, QWidget):
         # Creates a button for when the user has made their choice
         choose = QPushButton("View Recipe!", self)
         choose.setGeometry((self.width // 2) - 50, self.height // 2 + 200, 200, 70)
-        choose.move(250, self.height - 120)
+        choose.move(250, self.height - 145)
         choose.setFont(QFont('Georgia', 12, QFont.Bold))
         choose.setStyleSheet('border-radius: 35; background-color: rgb(210, 146, 68); '
                              'color: rgb(240, 225, 204)')
         choose.clicked.connect(self.chosen)
 
-        self.lbl_type.move(250, self.height - 200)
+        self.lbl_type.move(250, self.height - 225)
+
+        # Creates a back button
+        back = QPushButton("Back", self)
+        back.setGeometry((self.width // 2) - 300, self.height // 2 - 200, 100, 30)
+        back.move(300, self.height - 60)
+        back.setFont(QFont('Georgia', 12, QFont.Bold))
+        back.setStyleSheet('border-radius: 15; background-color: rgb(210, 146, 68); '
+                           'color: rgb(240, 225, 204)')
+        back.clicked.connect(self.go_back)
+
+        # Creates dependent combo-boxes for time and ingredient sort.
+        # self.combo_type.move(10, 10)
+        # combos = QHBoxLayout()
+        # self.setLayout(combos)
+        #
+        # self.combo_time
 
         # Centers the list
         vbox = QVBoxLayout()
-        vbox.setContentsMargins(150, 50, 100, 160)
+        # vbox.setContentsMargins(150, 50, 100, 190)
+        vbox.setContentsMargins(150, 50, 100, 220)
         self.recipes.setFixedSize(400, 375)
         vbox.addWidget(self.recipes)
         self.setLayout(vbox)
@@ -148,3 +183,20 @@ class RecipesDialogue(QDialog, QWidget):
             self.hide()
             self.display_recipe_dialogue = IndividualRecipe(self.recipe_of_choice.text())
             self.display_recipe_dialogue.show()
+
+    def update_combo_option(self, index) -> None:
+        """Update the options in the dependent combo-box."""
+        self.combo_option.clear()
+        options = self.combo_type.itemData(index)
+
+        if index == 1:
+            self.combo_option.setDisabled(True)
+        else:
+            self.combo_option.setDisabled(False)
+
+        if options:
+            self.combo_option.addItems(options)
+
+    def go_back(self) -> None:
+        """Take the user to the previous window.
+        """

@@ -55,8 +55,9 @@ class RecipesDialogue(QDialog, QWidget):
         self.data = data_reading.read_recipes(data_reading.RECIPES_FILE)
         data_reading.clean_ingredients(self.data)
         self.graph = data_type.load_graph("data/clean_recipes.csv")
-        self.sorted_recipes = sort_srch_rslts.ingrdnt_sort(self.data, self.user_ingredients,
+        ingrdnt_sorted_recipes = sort_srch_rslts.ingrdnt_sort(self.data, self.user_ingredients,
                                                            self.graph)
+        self.sorted_recipes = sort_srch_rslts.time_bound(ingrdnt_sorted_recipes, self.time)
 
         # Displays all the sorted recipes in a list
         self.recipes = QListWidget()
@@ -130,7 +131,7 @@ class RecipesDialogue(QDialog, QWidget):
     def chosen(self) -> None:
         """Select the chosen recipe and display it on the fourth page.
 
-        If the inputted recipe is not a valid recipe, raise an error and raise a pop up that
+        If the input recipe is not a valid recipe, raise an error and raise a pop up that
         says 'the inputted information is incorrect.'
         """
         # Does not allow user to pass through if they did not pick a valid choice or is empty

@@ -51,7 +51,7 @@ class IngredientsDialogue(QDialog, QWidget):
         self.max_add_label.move(57, 125)
         self.max_add_label.resize(200, 20)
 
-        self.max_time_label = QLabel("Enter the max. cooking time (min):", self)
+        self.max_time_label = QLabel("Maximum cooking time in minutes (optional):", self)
         self.max_time_label.setFont(QFont('Georgia', 12, QFont.Bold))
         self.max_time_label.setStyleSheet('color: rgb(211, 104, 80)')
         self.max_time_label.setFixedSize(250, 80)
@@ -325,5 +325,6 @@ class IngredientsDialogue(QDialog, QWidget):
             user_input = [x.text() for x in self.ingredient if x.isEnabled()]
 
             # Goes to the next dialogue
-            self.recipes_dialogue = RecipesDialogue(user_input, int(self.time_selected.text()))
+            self.recipes_dialogue = \
+                RecipesDialogue(user_input, int(self.time_selected.text()), self)
             self.recipes_dialogue.show()

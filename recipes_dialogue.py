@@ -29,12 +29,13 @@ class RecipesDialogue(QDialog, QWidget):
     """Class representing third window of program which displays the search results of recipes given
     the user's input ingredients and specification a maximum time for recipes displayed.
         """
-    def __init__(self, user_ingredients: list, time: int):
+    def __init__(self, user_ingredients: list, time: int, previous_window):
         """Class representing third window of program which displays the recipes filtered by the
         ingredients inputted by the user.
         """
         super().__init__()
         self.display_recipe_dialogue = None
+        self.previous_window = previous_window
 
         # Items imported from ingredients_dialogue
         self.user_ingredients = user_ingredients
@@ -60,8 +61,8 @@ class RecipesDialogue(QDialog, QWidget):
 
         # Creates dependent combo-boxes for time and ingredient sort.
         self.combo_type = QComboBox(self)
-        self.combo_type.addItem('Time', ['Ascending', 'Descending'])    # index 0
-        self.combo_type.addItem('Ingredients', [])  # index 1
+        self.combo_type.addItem('Ingredients', [])  # index 0
+        self.combo_type.addItem('Time', ['Ascending', 'Descending'])    # index 1
         self.combo_type.move(250, 80)
         self.combo_type.resize(145, 30)
         self.combo_type.setFont(QFont('Georgia', 12))
@@ -82,11 +83,15 @@ class RecipesDialogue(QDialog, QWidget):
         self.graph = data_type.load_graph("data/clean_recipes.csv")
         ingrdnt_sorted_recipes = sort_srch_rslts.ingrdnt_sort(self.data, self.user_ingredients,
                                                               self.graph)
-        self.sorted_recipes = sort_srch_rslts.time_bound(ingrdnt_sorted_recipes, self.time)
+
+        # varied options for viewing recipes
+        self.sorted_recipes_ings = sort_srch_rslts.time_bound(ingrdnt_sorted_recipes, self.time)
+        self.sorted_recipes_time_asc = sort_srch_rslts.time_sort(self.sorted_recipes_ings, False)
+        self.sorted_recipes_time_des = sort_srch_rslts.time_sort(self.sorted_recipes_ings, True)
 
         # Displays all the sorted recipes in a list
         self.recipes = QListWidget()
-        self.recipe_names = [x[1][0] for x in self.sorted_recipes]
+        self.recipe_names = [x[1][0] for x in self.sorted_recipes_ings]
         for i in range(len(self.recipe_names)):
             self.recipes.insertItem(i, self.recipe_names[i])
         self.recipes.setFont(QFont('Georgia', 10))
@@ -138,8 +143,8 @@ class RecipesDialogue(QDialog, QWidget):
         # Creates a back button
         back = QPushButton("Back", self)
         back.setGeometry((self.width // 2) - 50, self.height // 2 + 200, 70, 70)
-        back.move(580, self.height - 105)
-        back.setFont(QFont('Georgia', 12, QFont.Bold))
+        back.move(580, self.height - 110)
+        back.setFont(QFont('Georgia', 10, QFont.Bold))
         back.setStyleSheet("border-radius: 35; background-color: rgb(210, 146, 68); "
                            "color: rgb(240, 225, 204)")
         back.clicked.connect(self.go_back)
@@ -150,6 +155,12 @@ class RecipesDialogue(QDialog, QWidget):
         self.recipes.setFixedSize(400, 375)
         vbox.addWidget(self.recipes)
         self.setLayout(vbox)
+
+        self.combo_type.activated.connect(self.reorder_recipes_combo_type)
+        self.reorder_recipes_combo_type(self.combo_type.currentIndex())
+
+        self.combo_option.activated.connect(self.reorder_recipes_combo_option)
+        self.reorder_recipes_combo_option(self.combo_option.currentIndex())
 
         # Displays everything on the window
         self.show()
@@ -187,7 +198,7 @@ class RecipesDialogue(QDialog, QWidget):
         self.combo_option.clear()
         options = self.combo_type.itemData(index)
 
-        if index == 1:
+        if index == 0:
             self.combo_option.setDisabled(True)
         else:
             self.combo_option.setDisabled(False)
@@ -195,6 +206,36 @@ class RecipesDialogue(QDialog, QWidget):
         if options:
             self.combo_option.addItems(options)
 
+    def reorder_recipes_combo_type(self, index) -> None:
+        """Reorder the recipes based on the option selected in the combo_type combo-box."""
+        if index == 0:  # ingredients
+            self.recipes.clear()
+            self.recipe_names = [x[1][0] for x in self.sorted_recipes_ings]
+            for i in range(len(self.recipe_names)):
+                self.recipes.insertItem(i, self.recipe_names[i])
+
+        else:  # time
+            self.recipes.clear()
+            self.recipe_names = [x[1][0] for x in self.sorted_recipes_time_asc]
+            for i in range(len(self.recipe_names)):
+                self.recipes.insertItem(i, self.recipe_names[i])
+
+    def reorder_recipes_combo_option(self, index) -> None:
+        """Reorder the recipes based on the option selected in the combo_option combo-box."""
+        if index == 0:  # ascending
+            self.recipes.clear()
+            self.recipe_names = [x[1][0] for x in self.sorted_recipes_time_asc]
+            for i in range(len(self.recipe_names)):
+                self.recipes.insertItem(i, self.recipe_names[i])
+
+        else:   # descending
+            self.recipes.clear()
+            self.recipe_names = [x[1][0] for x in self.sorted_recipes_time_des]
+            for i in range(len(self.recipe_names)):
+                self.recipes.insertItem(i, self.recipe_names[i])
+
     def go_back(self) -> None:
         """Take the user to the previous window.
         """
+        self.hide()
+        self.previous_window.show()

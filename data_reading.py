@@ -60,24 +60,68 @@ def read_recipes(file: str) -> Dict[str, list]:
             index = 0
 
             for inner_row in row[:9]:
-                if index == 7:  # ingredients
+                if index == 0:
+                    if "''" in inner_row:
+                        inner_row = inner_row.replace("''", "'").strip("'")
+                        dict_val.append(inner_row.strip())
+                    else:
+                        dict_val.append(inner_row.strip())
+
+                elif index == 7:  # ingredients
                     ingredients = inner_row.split(',')
                     cleaned_ing = [x.strip() for x in ingredients]
                     dict_val.append(set(cleaned_ing))
-                    # dict_val.append(seREt(inner_row.split(',')))
 
                 elif index == 8:    # directions
                     sntnc = row[8].strip("'")
                     if not sntnc[-2:] == "**":
                         sntnc = sntnc + "**"    # to split every bullet point
-                    dict_val.append(list(sntnc.split('**'))[:-1])
+                    directions = list(sntnc.split('**'))[:-1]
+
+                    for x in directions:
+                        if "''" in x:
+                            directions[directions.index(x)] = x.replace("''", "'")
+
+                    dict_val.append(directions)
 
                 else:
                     dict_val.append(inner_row.strip())
 
                 index += 1
-
                 recipe_dict[row[9].strip()] = dict_val  # remove extra space before assigning
+
+    return recipe_dict
+
+
+def get_ing_amounts(file: str) -> Dict[str, list]:
+    """Read the given file and return a dictionary with recipe id mapping to
+    the ingredients and their amounts.
+
+    Is based upon the unclean recipes file.
+    """
+    recipe_dict = {}
+
+    with open(file) as csv_file:
+        reader = csv.reader(csv_file, delimiter=';')
+        next(reader)
+
+        for row in reader:
+            dict_val = []  # list containing ingredients
+            index = 0
+
+            for _ in row[:9]:
+                if index == 7:  # ingredients
+                    all_ings = row[8].strip("'")
+                    if not all_ings[-2:] == "**":
+                        all_ings = all_ings + "**"  # to split every bullet point
+                    dict_val.extend(list(all_ings.split('**'))[:-1])
+                    for x in dict_val:
+                        if "''" in x:
+                            dict_val[dict_val.index(x)] = x.replace("''", "'")
+
+                    recipe_dict[row[1].strip()] = dict_val  # remove extra space before assigning
+
+                index += 1
 
     return recipe_dict
 
@@ -275,4 +319,3 @@ def check_remove(ingredient: str) -> \
             remove[1] = True
 
     return remove
-

@@ -1,9 +1,7 @@
 """CSC111 Winter 2021 Project Phase 2: Final Submission, Recipes Results Program Window (3)
-
 Description
 ===============================
 This Python module contains the visualization of the recipes search results program window.
-
 Copyright and Usage Information
 ===============================
 This file is provided solely for the personal and private use of TAs and professors
@@ -11,13 +9,11 @@ teaching CSC111 at the University of Toronto St. George campus. All forms of
 distribution of this code, whether as given or with any changes, are
 expressly prohibited. For more information on copyright for CSC111 materials,
 please consult our Course Syllabus.
-
 This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, \
-    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QComboBox, QApplication, \
-    QHBoxLayout
-from PyQt5.QtCore import Qt, QRect
+    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QComboBox
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QIcon
 import data_reading
 import sort_srch_rslts
@@ -29,6 +25,7 @@ class RecipesDialogue(QDialog, QWidget):
     """Class representing third window of program which displays the search results of recipes given
     the user's input ingredients and specification a maximum time for recipes displayed.
         """
+
     def __init__(self, user_ingredients: list, time: int, previous_window):
         """Class representing third window of program which displays the recipes filtered by the
         ingredients inputted by the user.
@@ -62,7 +59,7 @@ class RecipesDialogue(QDialog, QWidget):
         # Creates dependent combo-boxes for time and ingredient sort.
         self.combo_type = QComboBox(self)
         self.combo_type.addItem('Ingredients', [])  # index 0
-        self.combo_type.addItem('Time', ['Ascending', 'Descending'])    # index 1
+        self.combo_type.addItem('Time', ['Ascending', 'Descending'])  # index 1
         self.combo_type.move(250, 80)
         self.combo_type.resize(145, 30)
         self.combo_type.setFont(QFont('Georgia', 12))
@@ -109,7 +106,7 @@ class RecipesDialogue(QDialog, QWidget):
         self.center()
         self.setFixedSize(700, 700)
         self.setStyleSheet("background-color: rgb(240, 225, 204)")
-        self.setWindowIcon(QIcon('visuals/L&C Icon.PNG'))
+        self.setWindowIcon(QIcon('visuals/L_C_Icon.PNG'))
 
     def init_window(self) -> None:
         """Open the third window on the user's screen with the provided dimensions.
@@ -149,6 +146,15 @@ class RecipesDialogue(QDialog, QWidget):
                            "color: rgb(240, 225, 204)")
         back.clicked.connect(self.go_back)
 
+        # Creates a clear button
+        clear_recipe = QPushButton("Clear", self)
+        clear_recipe.setGeometry((self.width // 2) - 50, self.height // 2 + 200, 70, 70)
+        clear_recipe.move(50, self.height - 110)
+        clear_recipe.setFont(QFont('Georgia', 10, QFont.Bold))
+        clear_recipe.setStyleSheet('border-radius: 35; background-color: rgb(210, 146, 68); '
+                                   'color: rgb(240, 225, 204)')
+        clear_recipe.clicked.connect(self.clear)
+
         # Centers the list
         vbox = QVBoxLayout()
         vbox.setContentsMargins(150, 100, 100, 170)
@@ -175,7 +181,6 @@ class RecipesDialogue(QDialog, QWidget):
 
     def chosen(self) -> None:
         """Select the chosen recipe and display it on the fourth page.
-
         If the input recipe is not a valid recipe, raise an error and raise a pop up that
         says 'the inputted information is incorrect.'
         """
@@ -190,7 +195,7 @@ class RecipesDialogue(QDialog, QWidget):
             warning.exec_()
         else:
             self.hide()
-            self.display_recipe_dialogue = IndividualRecipe(self.recipe_of_choice.text())
+            self.display_recipe_dialogue = IndividualRecipe(self.recipe_of_choice.text(), self)
             self.display_recipe_dialogue.show()
 
     def update_combo_option(self, index) -> None:
@@ -228,11 +233,15 @@ class RecipesDialogue(QDialog, QWidget):
             for i in range(len(self.recipe_names)):
                 self.recipes.insertItem(i, self.recipe_names[i])
 
-        else:   # descending
+        else:  # descending
             self.recipes.clear()
             self.recipe_names = [x[1][0] for x in self.sorted_recipes_time_des]
             for i in range(len(self.recipe_names)):
                 self.recipes.insertItem(i, self.recipe_names[i])
+
+    def clear(self) -> None:
+        """Clears the recipe in the input field."""
+        self.recipe_of_choice.clear()
 
     def go_back(self) -> None:
         """Take the user to the previous window.

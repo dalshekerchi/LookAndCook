@@ -36,7 +36,7 @@ class IngredientsDialogue(QDialog, QWidget):
         # Set up the screen background
         self.recipes_dialogue = None
         self.setStyleSheet("background-color: rgb(240, 225, 204)")
-        self.setWindowIcon(QIcon('visuals/L&C Icon.PNG'))
+        self.setWindowIcon(QIcon('visuals/L_C_Icon.PNG'))
 
         # Initialized all widgets needed
         self.lbl_selected = QLabel("Your List", self)

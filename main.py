@@ -65,7 +65,7 @@ class MainWindow(QDialog, QWidget):
         # Centers the title in the center of the page
         vbox = QVBoxLayout()
         image = QLabel()
-        pixmap = QPixmap("L_C_Logo.png").scaled(500, 500, 1)
+        pixmap = QPixmap("visuals/L_C_Logo.png").scaled(500, 500, 1)
         image.setPixmap(pixmap)
         vbox.addWidget(image, alignment=Qt.AlignCenter)
         self.setLayout(vbox)

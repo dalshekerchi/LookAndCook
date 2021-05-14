@@ -48,6 +48,8 @@ REMOVE_INGREDIENTS2 = {'rinsed and torn', 'and dried', 'rating',
 def read_recipes(file: str) -> Dict[str, list]:
     """Read the given file and return a dictionary with recipe id mapping to
     other attributes of the recipe stored in a list.
+
+    Based upon the clean_recipes.csv file.
     """
     recipe_dict = {}
 
@@ -97,7 +99,7 @@ def get_ing_amounts(file: str) -> Dict[str, list]:
     """Read the given file and return a dictionary with recipe id mapping to
     the ingredients and their amounts.
 
-    Is based upon the unclean recipes file.
+    Based upon the recipes.csv file.
     """
     recipe_dict = {}
 
@@ -139,8 +141,12 @@ def get_ingredients(data: Dict[str, list]) -> set:
 
 def get_review_scores(file: csv) -> Dict[str, float]:
     """Return a dictionary of recipe ids mapping to respective user ratings obtained
-    from the given file."""
+    from the given file.
+
+    Based upon the clean_recipes.csv file.
+    """
     unclean_reviews_dict = {}   # recipe_id: [score, length]
+    # 'length' for counting occurrences and taking average
 
     with open(file) as csv_file:
         reader = csv.reader(csv_file, delimiter=';')
@@ -148,7 +154,6 @@ def get_review_scores(file: csv) -> Dict[str, float]:
 
         for row in reader:
             row = row[0].split(",")
-
             if row[0] in unclean_reviews_dict:
                 unclean_reviews_dict[row[0]][0] += int(float(row[2]))
                 unclean_reviews_dict[row[0]][1] += 1
@@ -163,7 +168,10 @@ def get_review_scores(file: csv) -> Dict[str, float]:
 
 def get_reviews(file: csv) -> Dict[str, list]:
     """Return a dictionary of recipe ids mapping to respective user reviews obtained
-       from the given file."""
+    from the given file.
+
+    Based on reviews.csv file.
+    """
     reviews_dict = {}  # recipe_id: [reviews]
 
     with open(file) as csv_file:
@@ -171,12 +179,11 @@ def get_reviews(file: csv) -> Dict[str, list]:
         next(reader)
 
         for row in reader:
-            # breakpoint()
             if len(row) == 4 and '...' not in row[3]:
                 if row[0] in reviews_dict:
-                    reviews_dict[row[0]].append(row[3])
+                    reviews_dict[row[0]].append('"' + row[3].replace("''", "'").strip("'") + '"')
                 else:
-                    reviews_dict[row[0]] = [row[3]]
+                    reviews_dict[row[0]] = ['"' + row[3].replace("''", "'").strip("'") + '"']
 
     return reviews_dict
 

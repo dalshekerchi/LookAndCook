@@ -15,24 +15,27 @@ please consult our Course Syllabus.
 This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QWidget, QDesktopWidget, QLineEdit, \
-    QListWidget, QVBoxLayout
+    QListWidget, QVBoxLayout, QPushButton
 from PyQt5.QtGui import QIcon, QFont
 import data_reading
+from reviews_dialogue import Reviews
 
 
 class IndividualRecipe(QDialog, QWidget):
     """Class representing fourth window of program which displays a single recipe as selected
     by the user in the third window."""
 
-    def __init__(self, recipe_name: str) -> None:
+    def __init__(self, recipe_name: str, previous_window) -> None:
         """Initialize an instance of the IndividualRecipe window.
         """
         super().__init__()
+        self.display_reviews_dialogue = None
         self.recipe_name = recipe_name
+        self.previous_window = previous_window
 
         self.recipe_title = QLabel(self.recipe_name, self)
-        self.recipe_title.setFont(QFont('Georgia', 14, QFont.Bold))
-        self.recipe_title.setStyleSheet('color: rgb(211, 104, 80)')
+        self.recipe_title.setFont(QFont('Georgia', 15, QFont.Bold))
+        self.recipe_title.setStyleSheet('color: rgb(210, 146, 68)')
         self.recipe_title.setFixedSize(600, 40)
         self.recipe_title.move(50, 40)
 
@@ -46,12 +49,30 @@ class IndividualRecipe(QDialog, QWidget):
             if self.data[x][0] == self.recipe_name:
                 self.id = x
 
+        all_ratings = data_reading.get_review_scores("data/clean_reviews.csv")
+
+        if self.id in all_ratings:
+            rating = all_ratings[self.id]
+
+            self.lbl_stars = QLabel(str(rating) + '⭐' * round(rating), self)
+            self.lbl_stars.setFont(QFont('Georgia', 14, QFont.Bold))
+            self.lbl_stars.setStyleSheet('color: rgb(211, 104, 80)')
+            self.lbl_stars.setFixedSize(600, 60)
+            self.lbl_stars.move(450, 30)
+
+        else:
+            self.lbl_stars = QLabel('Rating unavailable ⭐', self)
+            self.lbl_stars.setFont(QFont('Georgia', 14, QFont.Bold))
+            self.lbl_stars.setStyleSheet('color: rgb(211, 104, 80)')
+            self.lbl_stars.setFixedSize(600, 60)
+            self.lbl_stars.move(420, 30)
+
         self.lbl_time_author = QLabel('Cook Time: ' + self.data[self.id][6] + '   |   Author: '
                                       + self.data[self.id][3], self)
         self.lbl_time_author.setFont(QFont('Georgia', 10))
         self.lbl_time_author.setStyleSheet('color: rgb(35, 87, 77)')
         self.lbl_time_author.setFixedSize(600, 40)
-        self.lbl_time_author.move(50, 70)
+        self.lbl_time_author.move(50, 73)
 
         self.lbl_ingred = QLabel('Ingredients', self)
         self.lbl_ingred.setFont(QFont('Georgia', 12, QFont.Bold))
@@ -65,7 +86,7 @@ class IndividualRecipe(QDialog, QWidget):
         self.lbl_direction.setFixedSize(600, 40)
         self.lbl_direction.move(50, 380)
 
-        self.ingredients_names = list(self.data[self.id][7])
+        self.ingredients_names = data_reading.get_ing_amounts("data/recipes.csv")[self.id]
 
         self.lst_ingredients = QListWidget()
         for i in range(len(self.ingredients_names)):
@@ -85,12 +106,12 @@ class IndividualRecipe(QDialog, QWidget):
         self.left = 500
         self.top = 200
         self.width = 700
-        self.height = 450
+        self.height = 700
         self.init_window()
         self.center()
         self.setFixedSize(700, 700)
         self.setStyleSheet("background-color: rgb(240, 225, 204)")
-        self.setWindowIcon(QIcon('visuals/L&C Icon.PNG'))
+        self.setWindowIcon(QIcon('visuals/L_C_Icon.PNG'))
 
         self.line_edit = None
         self.user_input = None
@@ -110,6 +131,24 @@ class IndividualRecipe(QDialog, QWidget):
         vbox.addWidget(self.lst_directions)
         self.setLayout(vbox)
 
+        # Creates a back button
+        back = QPushButton("Back", self)
+        back.setGeometry((self.width // 2) - 50, self.height // 2 + 200, 70, 70)
+        back.move(580, self.height - 110)
+        back.setFont(QFont('Georgia', 9, QFont.Bold))
+        back.setStyleSheet("border-radius: 35; background-color: rgb(210, 146, 68); "
+                           "color: rgb(240, 225, 204)")
+        back.clicked.connect(self.go_back)
+
+        # Creates a button for reviews
+        reviews = QPushButton("Reviews", self)
+        reviews.setGeometry((self.width // 2) - 50, self.height // 2 + 200, 70, 70)
+        reviews.move(280, self.height - 110)
+        reviews.setFont(QFont('Georgia', 9, QFont.Bold))
+        reviews.setStyleSheet("border-radius: 35; background-color: rgb(210, 146, 68); "
+                              "color: rgb(240, 225, 204)")
+        reviews.clicked.connect(self.reviews_window)
+
         self.show()
 
     def center(self) -> None:  # Used top center the window on the desktop
@@ -119,3 +158,16 @@ class IndividualRecipe(QDialog, QWidget):
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
+
+    def reviews_window(self) -> None:
+        """Display the reviews for the selected recipe in a new window.
+        """
+        self.hide()
+        self.display_reviews_dialogue = Reviews(self.id, self.recipe_name, self)
+        self.display_reviews_dialogue.show()
+
+    def go_back(self) -> None:
+        """Take the user to the previous window.
+        """
+        self.hide()
+        self.previous_window.show()

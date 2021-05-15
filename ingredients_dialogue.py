@@ -178,7 +178,7 @@ class IngredientsDialogue(QDialog, QWidget):
         vbox.setContentsMargins(250, 0, 120, 120)
         self.all_ingredients.setFixedSize(400, 300)
         vbox.addWidget(self.all_ingredients)
-        # self.all_ingredients.itemDoubleClicked.connect(self.add_ingredient)
+        self.all_ingredients.itemDoubleClicked.connect(self.add_ingredient)
         self.setLayout(vbox)
 
         # Creates an add_item item button
@@ -250,9 +250,12 @@ class IngredientsDialogue(QDialog, QWidget):
                 x.setDisabled(True)
         self.time_selected.clear()
 
-    # def add_ingredient(self) -> None:
-    #     """Add the clicked ingredient to the ingredients list."""
-    #     print(item)
+    def add_ingredient(self, item) -> None:
+        """Add the double clicked ingredient to the ingredients list."""
+        for x in self.ingredient:
+            if x.isEnabled() and x.text() == '':
+                x.setText(item.text())
+                return
 
     def submit(self) -> None:
         """Create button to submit user input and proceed to the third page, which displays the

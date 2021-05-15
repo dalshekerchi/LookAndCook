@@ -45,6 +45,7 @@ class Reviews(QDialog, QWidget):
             self.lst_reviews.setFont(QFont('Georgia', 10))
             self.lst_reviews.setStyleSheet('color: rgb(35, 87, 77)')
             self.lst_reviews.move(50, 200)
+            self.lst_reviews.setWordWrap(True)
 
         else:
             self.lbl_error = \

@@ -160,6 +160,7 @@ class RecipesDialogue(QDialog, QWidget):
         vbox.setContentsMargins(150, 100, 100, 170)
         self.recipes.setFixedSize(400, 375)
         vbox.addWidget(self.recipes)
+        self.recipes.itemDoubleClicked.connect(self.input_recipe)
         self.setLayout(vbox)
 
         self.combo_type.activated.connect(self.reorder_recipes_combo_type)
@@ -242,6 +243,10 @@ class RecipesDialogue(QDialog, QWidget):
     def clear(self) -> None:
         """Clears the recipe in the input field."""
         self.recipe_of_choice.clear()
+
+    def input_recipe(self, item) -> None:
+        """Input the double clicked recipe in the search field."""
+        self.recipe_of_choice.setText(item.text())
 
     def go_back(self) -> None:
         """Take the user to the previous window.

@@ -16,9 +16,10 @@ This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QWidget, QDesktopWidget, QLineEdit, \
     QListWidget, QVBoxLayout, QPushButton
-from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtGui import QIcon, QFont, QImage, QPixmap
 import data_reading
 from reviews_dialogue import Reviews
+import requests
 
 
 class IndividualRecipe(QDialog, QWidget):
@@ -74,6 +75,14 @@ class IndividualRecipe(QDialog, QWidget):
         self.lbl_time_author.setFixedSize(600, 40)
         self.lbl_time_author.move(50, 73)
 
+        url_image = self.data[self.id][2]
+        image = QImage()
+        image.loadFromData(requests.get(url_image).content)
+
+        self.image_label = QLabel(self)
+        self.image_label.setPixmap(QPixmap(image))
+        self.image_label.move(600, 50)
+
         self.lbl_ingred = QLabel('Ingredients', self)
         self.lbl_ingred.setFont(QFont('Georgia', 12, QFont.Bold))
         self.lbl_ingred.setStyleSheet('color: rgb(211, 104, 80)')
@@ -101,6 +110,7 @@ class IndividualRecipe(QDialog, QWidget):
         self.lst_directions.setFont(QFont('Georgia', 10))
         self.lst_directions.setStyleSheet('color: rgb(35, 87, 77)')
         self.lst_directions.move(50, 200)
+        self.lst_directions.setWordWrap(True)
 
         self.title = "Look and Cook"
         self.left = 500

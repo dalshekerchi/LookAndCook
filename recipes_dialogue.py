@@ -12,9 +12,9 @@ please consult our Course Syllabus.
 This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, \
-    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QComboBox
+    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QComboBox, QApplication
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont, QIcon
+from PyQt5.QtGui import QFont, QIcon, QColor
 import data_reading
 import sort_srch_rslts
 import data_type
@@ -24,7 +24,8 @@ from display_recipe_dialogue import IndividualRecipe
 class RecipesDialogue(QDialog, QWidget):
     """Class representing third window of program which displays the search results of recipes given
     the user's input ingredients and specification a maximum time for recipes displayed.
-        """
+    """
+    # visited: str
 
     def __init__(self, user_ingredients: list, time: int, previous_window):
         """Class representing third window of program which displays the recipes filtered by the
@@ -33,6 +34,7 @@ class RecipesDialogue(QDialog, QWidget):
         super().__init__()
         self.display_recipe_dialogue = None
         self.previous_window = previous_window
+        # self.visited = recent
 
         # Items imported from ingredients_dialogue
         self.user_ingredients = user_ingredients
@@ -162,6 +164,7 @@ class RecipesDialogue(QDialog, QWidget):
         vbox.setContentsMargins(150, 100, 100, 170)
         self.recipes.setFixedSize(400, 375)
         vbox.addWidget(self.recipes)
+        self.recipes.itemDoubleClicked.connect(self.input_recipe)
         self.setLayout(vbox)
 
         self.combo_type.activated.connect(self.reorder_recipes_combo_type)
@@ -196,9 +199,15 @@ class RecipesDialogue(QDialog, QWidget):
             warning.setIcon(QMessageBox.Critical)
             warning.exec_()
         else:
-            self.hide()
+            QApplication.setOverrideCursor(Qt.WaitCursor)
+            for i in range(self.recipes.count()):
+                if self.recipes.item(i).text() == self.recipe_of_choice.text():
+                    self.recipes.item(i).setForeground(QColor.fromRgb(210, 146, 68))
+
             self.display_recipe_dialogue = IndividualRecipe(self.recipe_of_choice.text(), self)
             self.display_recipe_dialogue.show()
+            self.hide()
+            QApplication.restoreOverrideCursor()
 
     def update_combo_option(self, index) -> None:
         """Update the options in the dependent combo-box."""
@@ -245,8 +254,14 @@ class RecipesDialogue(QDialog, QWidget):
         """Clears the recipe in the input field."""
         self.recipe_of_choice.clear()
 
+    def input_recipe(self, item) -> None:
+        """Input the double clicked recipe in the search field."""
+        self.recipe_of_choice.setText(item.text())
+
     def go_back(self) -> None:
         """Take the user to the previous window.
         """
-        self.hide()
+        QApplication.setOverrideCursor(Qt.WaitCursor)
         self.previous_window.show()
+        self.hide()
+        QApplication.restoreOverrideCursor()

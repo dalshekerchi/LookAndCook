@@ -15,8 +15,9 @@ please consult our Course Syllabus.
 This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QWidget, QDesktopWidget, QLineEdit, \
-    QListWidget, QVBoxLayout, QPushButton
+    QListWidget, QVBoxLayout, QPushButton, QApplication
 from PyQt5.QtGui import QIcon, QFont, QImage, QPixmap
+from PyQt5.QtCore import Qt
 import data_reading
 import requests
 from reviews_dialogue import Reviews
@@ -173,12 +174,16 @@ class IndividualRecipe(QDialog, QWidget):
     def reviews_window(self) -> None:
         """Display the reviews for the selected recipe in a new window.
         """
-        self.hide()
+        QApplication.setOverrideCursor(Qt.WaitCursor)
         self.display_reviews_dialogue = Reviews(self.id, self.recipe_name, self)
         self.display_reviews_dialogue.show()
+        self.hide()
+        QApplication.restoreOverrideCursor()
 
     def go_back(self) -> None:
         """Take the user to the previous window.
         """
-        self.hide()
+        QApplication.setOverrideCursor(Qt.WaitCursor)
         self.previous_window.show()
+        self.hide()
+        QApplication.restoreOverrideCursor()

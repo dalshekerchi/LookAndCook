@@ -12,7 +12,7 @@ please consult our Course Syllabus.
 This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, QPushButton, \
-    QListWidget
+    QListWidget, QApplication
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QIcon, QPixmap
 import data_reading
@@ -45,6 +45,7 @@ class Reviews(QDialog, QWidget):
             self.lst_reviews.setFont(QFont('Georgia', 10))
             self.lst_reviews.setStyleSheet('color: rgb(35, 87, 77)')
             self.lst_reviews.move(50, 200)
+            self.lst_reviews.setWordWrap(True)
 
         else:
             self.lbl_error = \
@@ -105,5 +106,7 @@ class Reviews(QDialog, QWidget):
     def go_back(self) -> None:
         """Take the user to the previous window.
         """
-        self.hide()
+        QApplication.setOverrideCursor(Qt.WaitCursor)
         self.previous_window.show()
+        self.hide()
+        QApplication.restoreOverrideCursor()

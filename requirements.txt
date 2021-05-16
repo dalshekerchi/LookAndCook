@@ -10,3 +10,4 @@ python-ta~=1.6.3
 plotly
 pygame~=2.0.1
 PyQt5
+requests

@@ -15,7 +15,7 @@ please consult our Course Syllabus.
 This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, \
-    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QSpinBox, QGraphicsColorizeEffect
+    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QSpinBox, QApplication, QGraphicsColorizeEffect
 from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
 from PyQt5.QtGui import QIcon, QFont, QColor
@@ -219,7 +219,7 @@ class IngredientsDialogue(QDialog, QWidget):
         vbox.setContentsMargins(250, 0, 120, 120)
         self.all_ingredients.setFixedSize(400, 300)
         vbox.addWidget(self.all_ingredients)
-        # self.all_ingredients.itemDoubleClicked.connect(self.add_ingredient)
+        self.all_ingredients.itemDoubleClicked.connect(self.add_ingredient)
         self.setLayout(vbox)
 
         # Creates an add_item item button
@@ -293,9 +293,12 @@ class IngredientsDialogue(QDialog, QWidget):
                 x.setDisabled(True)
         self.time_selected.setValue(0)
 
-    # def add_ingredient(self) -> None:
-    #     """Add the clicked ingredient to the ingredients list."""
-    #     print(item)
+    def add_ingredient(self, item) -> None:
+        """Add the double clicked ingredient to the ingredients list."""
+        for x in self.ingredient:
+            if x.isEnabled() and x.text() == '':
+                x.setText(item.text())
+                return
 
     def submit(self) -> None:
         """Create button to submit user input and proceed to the third page, which displays the
@@ -326,7 +329,7 @@ class IngredientsDialogue(QDialog, QWidget):
         if len(duplicates) != 0:  # This occurs when the user inputs the same ingredient twice
             contains_duplicates = QMessageBox()
             contains_duplicates.setWindowTitle("Error! - Duplicates")
-            contains_duplicates.setWindowIcon(QIcon(Path('visuals/L&C Icon.PNG')))
+            contains_duplicates.setWindowIcon(QIcon('visuals/L&C Icon.PNG'))
             if count == 1:  # Only one ingredient appears more than once
                 contains_duplicates.setText(
                     f'Sorry, the ingredient {duplicates} appears more than once.')
@@ -369,10 +372,12 @@ class IngredientsDialogue(QDialog, QWidget):
             x = invalid.exec_()
 
         else:  # If everything is correct
-            self.hide()
+            QApplication.setOverrideCursor(Qt.WaitCursor)
             user_input = [x.text() for x in self.ingredient if x.isEnabled()]
 
             # Goes to the next dialogue
             self.recipes_dialogue = \
                 RecipesDialogue(user_input, int(self.time_selected.text()), self)
             self.recipes_dialogue.show()
+            self.hide()
+            QApplication.restoreOverrideCursor()

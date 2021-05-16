@@ -15,7 +15,7 @@ please consult our Course Syllabus.
 This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, \
-    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QSpinBox
+    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QSpinBox, QApplication
 from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
 from PyQt5.QtGui import QIcon, QFont
@@ -329,10 +329,12 @@ class IngredientsDialogue(QDialog, QWidget):
             x = invalid.exec_()
 
         else:  # If everything is correct
-            self.hide()
+            QApplication.setOverrideCursor(Qt.WaitCursor)
             user_input = [x.text() for x in self.ingredient if x.isEnabled()]
 
             # Goes to the next dialogue
             self.recipes_dialogue = \
                 RecipesDialogue(user_input, int(self.time_selected.text()), self)
             self.recipes_dialogue.show()
+            self.hide()
+            QApplication.restoreOverrideCursor()

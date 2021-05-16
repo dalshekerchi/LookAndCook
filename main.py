@@ -85,10 +85,12 @@ class MainWindow(QDialog, QWidget):
     def clicked(self) -> None:
         """Link the start button to the second window displaying ingredient choices.
         """
-        self.hide()
+        QApplication.setOverrideCursor(Qt.WaitCursor)
         if self.ingredients_dialogue is None:
             self.ingredients_dialogue = IngredientsDialogue()
             self.ingredients_dialogue.show()
+        self.hide()
+        QApplication.restoreOverrideCursor()
 
 
 if __name__ == "__main__":

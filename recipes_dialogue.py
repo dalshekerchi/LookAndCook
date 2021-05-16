@@ -12,7 +12,7 @@ please consult our Course Syllabus.
 This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, \
-    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QComboBox
+    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QComboBox, QApplication
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QIcon, QColor
 import data_reading
@@ -197,13 +197,15 @@ class RecipesDialogue(QDialog, QWidget):
             warning.setIcon(QMessageBox.Critical)
             warning.exec_()
         else:
+            QApplication.setOverrideCursor(Qt.WaitCursor)
             for i in range(self.recipes.count()):
                 if self.recipes.item(i).text() == self.recipe_of_choice.text():
                     self.recipes.item(i).setForeground(QColor.fromRgb(210, 146, 68))
 
-            self.hide()
             self.display_recipe_dialogue = IndividualRecipe(self.recipe_of_choice.text(), self)
             self.display_recipe_dialogue.show()
+            self.hide()
+            QApplication.restoreOverrideCursor()
 
     def update_combo_option(self, index) -> None:
         """Update the options in the dependent combo-box."""
@@ -257,5 +259,7 @@ class RecipesDialogue(QDialog, QWidget):
     def go_back(self) -> None:
         """Take the user to the previous window.
         """
-        self.hide()
+        QApplication.setOverrideCursor(Qt.WaitCursor)
         self.previous_window.show()
+        self.hide()
+        QApplication.restoreOverrideCursor()

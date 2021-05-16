@@ -361,7 +361,7 @@ class Ingredients(QDialog, QWidget):
 #         self.data = data_reading.read_recipes(data_reading.RECIPES_FILE)
 #         data_reading.clean_ingredients(self.data)
 #         self.graph = data_type.load_graph("data/clean_recipes.csv")
-#         self.sorted_recipes = sort_srch_rslts.ingrdnt_sort(self.data, self.user_ingredients,
+#         self.sorted_recipes = sort_srch_rslts.ingredients_sort(self.data, self.user_ingredients,
 #                                                            self.graph)
 #
 #         self.recipes = QListWidget()
@@ -443,7 +443,7 @@ class Ingredients(QDialog, QWidget):
 #         print('check')
 #         if i == 0:
 #             self.recipes.clear()
-#             sorted_recipes = sort_srch_rslts.ingrdnt_sort(self.data, self.user_ingredients,
+#             sorted_recipes = sort_srch_rslts.ingredients_sort(self.data, self.user_ingredients,
 #                                                           self.graph)
 #             recipe_names = [x[1][0] for x in sorted_recipes]
 #

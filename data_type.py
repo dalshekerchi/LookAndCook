@@ -1,18 +1,7 @@
-"""CSC111 Winter 2021 Project Phase 2, Creating Data Types
+"""
 Description
 ===============================
-This Python module contains classes to initialize instances of _Vertex and Graph, as well
-as a function to load a graph given recipe data.
 
-Copyright and Usage Information
-===============================
-This file is provided solely for the personal and private use of TAs and professors
-teaching CSC111 at the University of Toronto St. George campus. All forms of
-distribution of this code, whether as given or with any changes, are
-expressly prohibited. For more information on copyright for CSC111 materials,
-please consult our Course Syllabus.
-
-This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
 """
 from __future__ import annotations
 from typing import Any

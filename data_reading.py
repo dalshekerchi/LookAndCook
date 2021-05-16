@@ -1,17 +1,7 @@
-"""CSC111 Final Project, Data Reading
-
+"""
 Description
 ===============================
-This module reads the raw data from the csv file and converts it into a usable format.
-===============================
 
-This file is provided solely for the personal and private use of TA's and professors
-teaching CSC111 at the University of Toronto St. George campus. All forms of
-distribution of this code, whether as given or with any changes, are
-expressly prohibited. For more information on copyright for CSC111 materials,
-please consult our Course Syllabus.
-
-This file is Copyright (c) 2020 Dana Alshekerchi, Nehchal Kalsi, Kathy Lee, Audrey Yoshino.
 """
 
 from __future__ import annotations

@@ -1,25 +1,13 @@
-"""CSC111 Winter 2021 Project Phase 2: Final Submission, Ingredients Program Window (2)
-
+"""
 Description
 ===============================
-This Python module contains the visualization of the ingredients selection program window.
 
-Copyright and Usage Information
-===============================
-This file is provided solely for the personal and private use of TAs and professors
-teaching CSC111 at the University of Toronto St. George campus. All forms of
-distribution of this code, whether as given or with any changes, are
-expressly prohibited. For more information on copyright for CSC111 materials,
-please consult our Course Syllabus.
-
-This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QWidget, QDesktopWidget, QLineEdit, \
     QListWidget, QVBoxLayout, QPushButton, QApplication
 from PyQt5.QtGui import QIcon, QFont, QImage, QPixmap
 from PyQt5.QtCore import Qt
 import data_reading
-import requests
 from reviews_dialogue import Reviews
 import requests
 
@@ -54,21 +42,21 @@ class IndividualRecipe(QDialog, QWidget):
 
         all_ratings = data_reading.get_review_scores("data/clean_reviews.csv")
 
-        # if self.id in all_ratings:
-        #     rating = all_ratings[self.id]
-        #
-        #     self.lbl_stars = QLabel(str(rating) + 'a' * round(rating), self)
-        #     self.lbl_stars.setFont(QFont('Georgia', 14, QFont.Bold))
-        #     self.lbl_stars.setStyleSheet('color: rgb(211, 104, 80)')
-        #     self.lbl_stars.setFixedSize(600, 60)
-        #     self.lbl_stars.move(450, 30)
-        #
-        # else:
-        #     self.lbl_stars = QLabel('Rating unavailable a', self)
-        #     self.lbl_stars.setFont(QFont('Georgia', 14, QFont.Bold))
-        #     self.lbl_stars.setStyleSheet('color: rgb(211, 104, 80)')
-        #     self.lbl_stars.setFixedSize(600, 60)
-        #     self.lbl_stars.move(420, 30)
+        if self.id in all_ratings:
+            rating = all_ratings[self.id]
+
+            self.lbl_stars = QLabel(str(rating) + 'a' * round(rating), self)
+            self.lbl_stars.setFont(QFont('Georgia', 14, QFont.Bold))
+            self.lbl_stars.setStyleSheet('color: rgb(211, 104, 80)')
+            self.lbl_stars.setFixedSize(600, 60)
+            self.lbl_stars.move(450, 30)
+
+        else:
+            self.lbl_stars = QLabel('Rating unavailable a', self)
+            self.lbl_stars.setFont(QFont('Georgia', 14, QFont.Bold))
+            self.lbl_stars.setStyleSheet('color: rgb(211, 104, 80)')
+            self.lbl_stars.setFixedSize(600, 60)
+            self.lbl_stars.move(420, 30)
 
         self.lbl_time_author = QLabel('Cook Time: ' + self.data[self.id][6] + '   |   Author: '
                                       + self.data[self.id][3], self)
@@ -81,15 +69,15 @@ class IndividualRecipe(QDialog, QWidget):
         image = QImage()
         image.loadFromData(requests.get(url_image).content)
 
-        self.image_label = QLabel(self)
-        self.image_label.setPixmap(QPixmap(image))
-        self.image_label.move(600, 50)
+        self.lbl_image = QLabel(self)
+        self.lbl_image.setPixmap(QPixmap(image))
+        self.lbl_image.move(600, 50)
 
-        self.lbl_ingred = QLabel('Ingredients', self)
-        self.lbl_ingred.setFont(QFont('Georgia', 12, QFont.Bold))
-        self.lbl_ingred.setStyleSheet('color: rgb(211, 104, 80)')
-        self.lbl_ingred.setFixedSize(600, 40)
-        self.lbl_ingred.move(50, 120)
+        self.lbl_ingredients = QLabel('Ingredients', self)
+        self.lbl_ingredients.setFont(QFont('Georgia', 12, QFont.Bold))
+        self.lbl_ingredients.setStyleSheet('color: rgb(211, 104, 80)')
+        self.lbl_ingredients.setFixedSize(600, 40)
+        self.lbl_ingredients.move(50, 120)
 
         self.lbl_direction = QLabel('Directions', self)
         self.lbl_direction.setFont(QFont('Georgia', 12, QFont.Bold))

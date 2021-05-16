@@ -1,15 +1,7 @@
-"""CSC111 Winter 2021 Project Phase 2: Final Submission, Reviews Window (5)
+"""
 Description
 ===============================
-This Python module contains the reviews of the recipe selected by the user.
-Copyright and Usage Information
-===============================
-This file is provided solely for the personal and private use of TAs and professors
-teaching CSC111 at the University of Toronto St. George campus. All forms of
-distribution of this code, whether as given or with any changes, are
-expressly prohibited. For more information on copyright for CSC111 materials,
-please consult our Course Syllabus.
-This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
+
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, QPushButton, \
     QListWidget, QApplication

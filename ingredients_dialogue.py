@@ -1,21 +1,11 @@
-"""CSC111 Winter 2021 Project Phase 2: Final Submission, Ingredients Program Window (2)
-
+"""
 Description
 ===============================
-This Python module contains the visualization of the ingredients selection program window.
 
-Copyright and Usage Information
-===============================
-This file is provided solely for the personal and private use of TAs and professors
-teaching CSC111 at the University of Toronto St. George campus. All forms of
-distribution of this code, whether as given or with any changes, are
-expressly prohibited. For more information on copyright for CSC111 materials,
-please consult our Course Syllabus.
-
-This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, \
-    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QSpinBox, QApplication, QGraphicsColorizeEffect
+    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QSpinBox, QApplication, \
+    QGraphicsColorizeEffect
 from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
 from PyQt5.QtGui import QIcon, QFont, QColor
@@ -40,35 +30,35 @@ class IngredientsDialogue(QDialog, QWidget):
         self.setWindowIcon(QIcon('visuals/L_C_Icon.PNG'))
 
         # Initialized all widgets needed
-        self.lbl_selected = QLabel("Your List", self)
-        self.lbl_selected.setFont(QFont('Georgia', 12, QFont.Bold))
-        self.lbl_selected.setStyleSheet('color: rgb(211, 104, 80)')
-        self.lbl_selected.setFixedSize(200, 25)
-        self.lbl_selected.move(80, 100)
+        self.lbl_list = QLabel("Your List", self)
+        self.lbl_list.setFont(QFont('Georgia', 12, QFont.Bold))
+        self.lbl_list.setStyleSheet('color: rgb(211, 104, 80)')
+        self.lbl_list.setFixedSize(200, 25)
+        self.lbl_list.move(80, 100)
 
-        self.max_add_label = QLabel("(10 ingredients max.)", self)
-        self.max_add_label.setFont(QFont('Georgia', 9))
-        self.max_add_label.setStyleSheet('color: rgb(35, 87, 77)')
-        self.max_add_label.move(57, 125)
-        self.max_add_label.resize(200, 20)
+        self.lbl_max_ingredients = QLabel("(10 ingredients max.)", self)
+        self.lbl_max_ingredients.setFont(QFont('Georgia', 9))
+        self.lbl_max_ingredients.setStyleSheet('color: rgb(35, 87, 77)')
+        self.lbl_max_ingredients.move(57, 125)
+        self.lbl_max_ingredients.resize(200, 20)
 
-        self.max_time_label = QLabel("Maximum cooking time in minutes (optional):", self)
-        self.max_time_label.setFont(QFont('Georgia', 12, QFont.Bold))
-        self.max_time_label.setStyleSheet('color: rgb(211, 104, 80)')
-        self.max_time_label.setFixedSize(250, 80)
-        self.max_time_label.setWordWrap(True)
+        self.lbl_max_time = QLabel("Maximum cooking time in minutes (optional):", self)
+        self.lbl_max_time.setFont(QFont('Georgia', 12, QFont.Bold))
+        self.lbl_max_time.setStyleSheet('color: rgb(211, 104, 80)')
+        self.lbl_max_time.setFixedSize(250, 80)
+        self.lbl_max_time.setWordWrap(True)
 
-        self.lbl_all = QLabel("All Ingredients", self)
-        self.lbl_all.setFont(QFont('Georgia', 12, QFont.Bold))
-        self.lbl_all.setStyleSheet('color: rgb(211, 104, 80)')
-        self.lbl_all.setFixedSize(200, 25)
-        self.lbl_all.move(375, 100)
+        self.lbl_all_ingredients = QLabel("All Ingredients", self)
+        self.lbl_all_ingredients.setFont(QFont('Georgia', 12, QFont.Bold))
+        self.lbl_all_ingredients.setStyleSheet('color: rgb(211, 104, 80)')
+        self.lbl_all_ingredients.setFixedSize(200, 25)
+        self.lbl_all_ingredients.move(375, 100)
 
-        self.lbl_select = QLabel("Select your ingredients!", self)
-        self.lbl_select.setFont(QFont('Georgia', 17, QFont.Bold))
-        self.lbl_select.setStyleSheet('color: rgb(210, 146, 68)')
-        self.lbl_select.setFixedSize(400, 40)
-        self.lbl_select.move(180, 40)
+        self.lbl_select_items = QLabel("Select your ingredients!", self)
+        self.lbl_select_items.setFont(QFont('Georgia', 17, QFont.Bold))
+        self.lbl_select_items.setStyleSheet('color: rgb(210, 146, 68)')
+        self.lbl_select_items.setFixedSize(400, 40)
+        self.lbl_select_items.move(180, 40)
 
         self.time_selected = QSpinBox(self)
         self.time_selected.setStyleSheet('color: rgb(35, 87, 77)')
@@ -193,7 +183,7 @@ class IngredientsDialogue(QDialog, QWidget):
         self.setWindowTitle(self.title)
 
         # Moves the labels to the right position
-        self.max_time_label.move(250, self.height - 230)
+        self.lbl_max_time.move(250, self.height - 230)
         self.time_selected.move(550, self.height - 200)
 
         # Creates an autocomplete system to use when typing the ingredients
@@ -273,6 +263,7 @@ class IngredientsDialogue(QDialog, QWidget):
         """Enables search box for user to input a new ingredient."""
         for x in range(len(self.ingredient) - 1, 0, -1):
             if self.ingredient[x - 1].isEnabled():
+                self.ingredient[x - 1].setCursorPosition(0)
                 self.ingredient[x].setDisabled(False)
                 self.disabled_color[x - 1].setEnabled(False)
 

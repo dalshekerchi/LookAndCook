@@ -1,25 +1,14 @@
-"""CSC111 Final Project, Sorting Search Results
-
+"""
 Description
 ===============================
-This module uses output from search and sorts results based on user's specifications.
 
-Copyright and Usage Information
-===============================
-
-This file is provided solely for the personal and private use of TA's and professors
-teaching CSC111 at the University of Toronto St. George campus. All forms of
-distribution of this code, whether as given or with any changes, are
-expressly prohibited. For more information on copyright for CSC111 materials,
-please consult our Course Syllabus.
-
-This file is Copyright (c) 2020 Dana Alshekerchi, Nehchal Kalsi, Kathy Lee, Audrey Yoshino.
 """
 from typing import Dict, List
 import data_type
 
 
-def ingrdnt_sort(data: Dict[str, list], user_ingrdnts: list, graph: data_type.Graph) -> List[tuple]:
+def ingredients_sort(data: Dict[str, list], user_ingredients: list, graph: data_type.Graph) -> List[
+    tuple]:
     """Return a list of tuples containing the recipe ids and other attributes of recipes
      from data sorted in decreasing order of number of ingredients used from user_ingrdnts.
 
@@ -27,21 +16,21 @@ def ingrdnt_sort(data: Dict[str, list], user_ingrdnts: list, graph: data_type.Gr
 
      Step 1 in the recipe search algorithm.
     """
-    recipe_occurence = {}
+    recipe_occurrence = {}
     sorted_recipes = []
 
-    for item in user_ingrdnts:
+    for item in user_ingredients:
         neighbours = graph.get_neighbours(item.strip())  # neighbours = set of recipe ids
 
         assert all([x in graph.get_all_vertices('recipe') for x in neighbours])
 
         for recipe in neighbours:
-            if recipe in recipe_occurence:
-                recipe_occurence[recipe] += 1
+            if recipe in recipe_occurrence:
+                recipe_occurrence[recipe] += 1
             else:
-                recipe_occurence[recipe] = 1
+                recipe_occurrence[recipe] = 1
 
-    sorted_recipe_ids = sorted(recipe_occurence.items(), key=lambda x: x[1], reverse=True)
+    sorted_recipe_ids = sorted(recipe_occurrence.items(), key=lambda x: x[1], reverse=True)
 
     for item in sorted_recipe_ids:
         sorted_recipes.append((item[0], data[item[0]]))
@@ -54,7 +43,7 @@ def time_bound(data: List[tuple], max_mins: int) -> List[tuple]:
     """Return a list of recipes from data which have a total cooking time less than or equal to
     max_mins.
 
-    Step 2 in the recipe search algorithm. Uses output from the function ingrdnt_sort as input.
+    Step 2 in the recipe search algorithm. Uses output from the function ingredients_sort as input.
     """
     if max_mins == 0:
         return data

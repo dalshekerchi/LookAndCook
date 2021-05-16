@@ -87,10 +87,12 @@ class RecipesDialogue(QDialog, QWidget):
         self.sorted_recipes_time_des = sort_srch_rslts.time_sort(self.sorted_recipes_ings, True)
 
         # Displays all the sorted recipes in a list
+        self.available_recipes = []
         self.recipes = QListWidget()
         self.recipe_names = [x[1][0] for x in self.sorted_recipes_ings]
         for i in range(len(self.recipe_names)):
             self.recipes.insertItem(i, self.recipe_names[i])
+            self.available_recipes.append(self.recipe_names[i])
         self.recipes.setFont(QFont('Georgia', 10))
         self.recipes.setStyleSheet('color: rgb(35, 87, 77)')
 
@@ -186,7 +188,7 @@ class RecipesDialogue(QDialog, QWidget):
         """
         # Does not allow user to pass through if they did not pick a valid choice or is empty
         if self.recipe_of_choice.text() == '' or self.recipe_of_choice.text() not in \
-                self.recipe_names:
+                self.available_recipes:
             warning = QMessageBox()
             warning.setWindowTitle("Error!")
             warning.setWindowIcon(QIcon('visuals/L&C Icon.PNG'))

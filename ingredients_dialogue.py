@@ -15,12 +15,13 @@ please consult our Course Syllabus.
 This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, \
-    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QSpinBox
+    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QSpinBox, QGraphicsColorizeEffect
 from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
-from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtGui import QIcon, QFont, QColor
 import data_reading
 from recipes_dialogue import RecipesDialogue
+from pathlib import Path
 
 
 class IngredientsDialogue(QDialog, QWidget):
@@ -82,6 +83,33 @@ class IngredientsDialogue(QDialog, QWidget):
         self.line_edit = None
         self.user_input = None
 
+        self.disabled_color2 = QGraphicsColorizeEffect()
+        self.disabled_color2.setColor(QColor.fromRgb(240, 225, 204))
+
+        self.disabled_color3 = QGraphicsColorizeEffect()
+        self.disabled_color3.setColor(QColor.fromRgb(240, 225, 204))
+
+        self.disabled_color4 = QGraphicsColorizeEffect()
+        self.disabled_color4.setColor(QColor.fromRgb(240, 225, 204))
+
+        self.disabled_color5 = QGraphicsColorizeEffect()
+        self.disabled_color5.setColor(QColor.fromRgb(240, 225, 204))
+
+        self.disabled_color6 = QGraphicsColorizeEffect()
+        self.disabled_color6.setColor(QColor.fromRgb(240, 225, 204))
+
+        self.disabled_color7 = QGraphicsColorizeEffect()
+        self.disabled_color7.setColor(QColor.fromRgb(240, 225, 204))
+
+        self.disabled_color8 = QGraphicsColorizeEffect()
+        self.disabled_color8.setColor(QColor.fromRgb(240, 225, 204))
+
+        self.disabled_color9 = QGraphicsColorizeEffect()
+        self.disabled_color9.setColor(QColor.fromRgb(240, 225, 204))
+
+        self.disabled_color10 = QGraphicsColorizeEffect()
+        self.disabled_color10.setColor(QColor.fromRgb(240, 225, 204))
+
         # Sets up all the line edits
         self.ingredient1 = QLineEdit(self)
         self.ingredient1.setStyleSheet(
@@ -91,43 +119,56 @@ class IngredientsDialogue(QDialog, QWidget):
         self.ingredient2.setStyleSheet(
             'background-color: rgb(224, 182, 157); color: rgb(35, 87, 77)')
         self.ingredient2.setFont(QFont('Georgia', 10))
+        self.ingredient2.setGraphicsEffect(self.disabled_color2)
         self.ingredient3 = QLineEdit(self)
         self.ingredient3.setStyleSheet(
             'background-color: rgb(224, 182, 157); color: rgb(35, 87, 77)')
         self.ingredient3.setFont(QFont('Georgia', 10))
+        self.ingredient3.setGraphicsEffect(self.disabled_color3)
         self.ingredient4 = QLineEdit(self)
         self.ingredient4.setStyleSheet(
             'background-color: rgb(224, 182, 157); color: rgb(35, 87, 77)')
         self.ingredient4.setFont(QFont('Georgia', 10))
+        self.ingredient4.setGraphicsEffect(self.disabled_color4)
         self.ingredient5 = QLineEdit(self)
         self.ingredient5.setStyleSheet(
             'background-color: rgb(224, 182, 157); color: rgb(35, 87, 77)')
         self.ingredient5.setFont(QFont('Georgia', 10))
+        self.ingredient5.setGraphicsEffect(self.disabled_color5)
         self.ingredient6 = QLineEdit(self)
         self.ingredient6.setStyleSheet(
             'background-color: rgb(224, 182, 157); color: rgb(35, 87, 77)')
         self.ingredient6.setFont(QFont('Georgia', 10))
+        self.ingredient6.setGraphicsEffect(self.disabled_color6)
         self.ingredient7 = QLineEdit(self)
         self.ingredient7.setStyleSheet(
             'background-color: rgb(224, 182, 157); color: rgb(35, 87, 77)')
         self.ingredient7.setFont(QFont('Georgia', 10))
+        self.ingredient7.setGraphicsEffect(self.disabled_color7)
         self.ingredient8 = QLineEdit(self)
         self.ingredient8.setStyleSheet(
             'background-color: rgb(224, 182, 157); color: rgb(35, 87, 77)')
         self.ingredient8.setFont(QFont('Georgia', 10))
+        self.ingredient8.setGraphicsEffect(self.disabled_color8)
         self.ingredient9 = QLineEdit(self)
         self.ingredient9.setStyleSheet(
             'background-color: rgb(224, 182, 157); color: rgb(35, 87, 77)')
         self.ingredient9.setFont(QFont('Georgia', 10))
+        self.ingredient9.setGraphicsEffect(self.disabled_color9)
         self.ingredient10 = QLineEdit(self)
         self.ingredient10.setStyleSheet(
             'background-color: rgb(224, 182, 157); color: rgb(35, 87, 77)')
         self.ingredient10.setFont(QFont('Georgia', 10))
+        self.ingredient10.setGraphicsEffect(self.disabled_color10)
 
         # Gets all the ingredients from the data
         self.ingredient = [self.ingredient1, self.ingredient2, self.ingredient3, self.ingredient4,
                            self.ingredient5, self.ingredient6, self.ingredient7,
                            self.ingredient8, self.ingredient9, self.ingredient10]
+
+        self.disabled_color = [self.disabled_color2, self.disabled_color3, self.disabled_color4,
+                               self.disabled_color5, self.disabled_color6, self.disabled_color7,
+                               self.disabled_color8, self.disabled_color9, self.disabled_color10]
         data = data_reading.read_recipes(data_reading.RECIPES_FILE)
         data_reading.clean_ingredients(data)
         self.clean = sorted(list(data_reading.get_ingredients(data)))
@@ -233,13 +274,15 @@ class IngredientsDialogue(QDialog, QWidget):
         for x in range(len(self.ingredient) - 1, 0, -1):
             if self.ingredient[x - 1].isEnabled():
                 self.ingredient[x].setDisabled(False)
+                self.disabled_color[x - 1].setEnabled(False)
 
     def remove_item(self) -> None:
         """Removes the last ingredient of the list."""
-        for x in self.ingredient[::-1][:-1]:
-            if x.isEnabled():
-                x.setDisabled(True)
-                x.clear()
+        for x in range(len(self.ingredient))[::-1][:-1]:
+            if self.ingredient[x].isEnabled():
+                self.ingredient[x].setDisabled(True)
+                self.ingredient[x].clear()
+                self.disabled_color[x - 1].setEnabled(True)
                 return
 
     def clear_list(self) -> None:
@@ -248,7 +291,7 @@ class IngredientsDialogue(QDialog, QWidget):
             x.clear()
             if x != self.ingredient1:
                 x.setDisabled(True)
-        self.time_selected.clear()
+        self.time_selected.setValue(0)
 
     # def add_ingredient(self) -> None:
     #     """Add the clicked ingredient to the ingredients list."""
@@ -283,7 +326,7 @@ class IngredientsDialogue(QDialog, QWidget):
         if len(duplicates) != 0:  # This occurs when the user inputs the same ingredient twice
             contains_duplicates = QMessageBox()
             contains_duplicates.setWindowTitle("Error! - Duplicates")
-            contains_duplicates.setWindowIcon(QIcon('visuals/L&C Icon.PNG'))
+            contains_duplicates.setWindowIcon(QIcon(Path('visuals/L&C Icon.PNG')))
             if count == 1:  # Only one ingredient appears more than once
                 contains_duplicates.setText(
                     f'Sorry, the ingredient {duplicates} appears more than once.')

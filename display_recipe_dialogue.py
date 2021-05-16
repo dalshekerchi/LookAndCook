@@ -18,6 +18,7 @@ from PyQt5.QtWidgets import QLabel, QDialog, QWidget, QDesktopWidget, QLineEdit,
     QListWidget, QVBoxLayout, QPushButton
 from PyQt5.QtGui import QIcon, QFont, QImage, QPixmap
 import data_reading
+import requests
 from reviews_dialogue import Reviews
 import requests
 
@@ -52,21 +53,21 @@ class IndividualRecipe(QDialog, QWidget):
 
         all_ratings = data_reading.get_review_scores("data/clean_reviews.csv")
 
-        if self.id in all_ratings:
-            rating = all_ratings[self.id]
-
-            self.lbl_stars = QLabel(str(rating) + '⭐' * round(rating), self)
-            self.lbl_stars.setFont(QFont('Georgia', 14, QFont.Bold))
-            self.lbl_stars.setStyleSheet('color: rgb(211, 104, 80)')
-            self.lbl_stars.setFixedSize(600, 60)
-            self.lbl_stars.move(450, 30)
-
-        else:
-            self.lbl_stars = QLabel('Rating unavailable ⭐', self)
-            self.lbl_stars.setFont(QFont('Georgia', 14, QFont.Bold))
-            self.lbl_stars.setStyleSheet('color: rgb(211, 104, 80)')
-            self.lbl_stars.setFixedSize(600, 60)
-            self.lbl_stars.move(420, 30)
+        # if self.id in all_ratings:
+        #     rating = all_ratings[self.id]
+        #
+        #     self.lbl_stars = QLabel(str(rating) + 'a' * round(rating), self)
+        #     self.lbl_stars.setFont(QFont('Georgia', 14, QFont.Bold))
+        #     self.lbl_stars.setStyleSheet('color: rgb(211, 104, 80)')
+        #     self.lbl_stars.setFixedSize(600, 60)
+        #     self.lbl_stars.move(450, 30)
+        #
+        # else:
+        #     self.lbl_stars = QLabel('Rating unavailable a', self)
+        #     self.lbl_stars.setFont(QFont('Georgia', 14, QFont.Bold))
+        #     self.lbl_stars.setStyleSheet('color: rgb(211, 104, 80)')
+        #     self.lbl_stars.setFixedSize(600, 60)
+        #     self.lbl_stars.move(420, 30)
 
         self.lbl_time_author = QLabel('Cook Time: ' + self.data[self.id][6] + '   |   Author: '
                                       + self.data[self.id][3], self)

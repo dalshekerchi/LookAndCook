@@ -14,7 +14,7 @@ This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, \
     QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QComboBox
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont, QIcon
+from PyQt5.QtGui import QFont, QIcon, QColor
 import data_reading
 import sort_srch_rslts
 import data_type
@@ -24,7 +24,8 @@ from display_recipe_dialogue import IndividualRecipe
 class RecipesDialogue(QDialog, QWidget):
     """Class representing third window of program which displays the search results of recipes given
     the user's input ingredients and specification a maximum time for recipes displayed.
-        """
+    """
+    # visited: str
 
     def __init__(self, user_ingredients: list, time: int, previous_window):
         """Class representing third window of program which displays the recipes filtered by the
@@ -33,6 +34,7 @@ class RecipesDialogue(QDialog, QWidget):
         super().__init__()
         self.display_recipe_dialogue = None
         self.previous_window = previous_window
+        # self.visited = recent
 
         # Items imported from ingredients_dialogue
         self.user_ingredients = user_ingredients
@@ -195,6 +197,10 @@ class RecipesDialogue(QDialog, QWidget):
             warning.setIcon(QMessageBox.Critical)
             warning.exec_()
         else:
+            for i in range(self.recipes.count()):
+                if self.recipes.item(i).text() == self.recipe_of_choice.text():
+                    self.recipes.item(i).setForeground(QColor.fromRgb(210, 146, 68))
+
             self.hide()
             self.display_recipe_dialogue = IndividualRecipe(self.recipe_of_choice.text(), self)
             self.display_recipe_dialogue.show()

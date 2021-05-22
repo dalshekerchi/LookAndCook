@@ -36,8 +36,10 @@ class Reviews(QDialog, QWidget):
             self.lst_reviews = QListWidget()
             for i in range(len(reviews)):
                 self.lst_reviews.insertItem(i, str(i + 1) + '. ' + reviews[i])
+
             self.lst_reviews.setFont(QFont('Tisa', 10))
             self.lst_reviews.setStyleSheet('color: rgb(35, 87, 77)')
+            self.lst_reviews.setFixedSize(600, 490)
             self.lst_reviews.move(50, 200)
             self.lst_reviews.setWordWrap(True)
 
@@ -49,14 +51,9 @@ class Reviews(QDialog, QWidget):
             self.lbl_error.setFixedSize(600, 60)
             self.lbl_error.move(50, 615)
 
-            # self.lst_reviews = QLabel()
-            # pixmap = QPixmap("visuals/error_image.png").scaled(200, 200, 1)
-            # self.lst_reviews.setPixmap(pixmap)
-
-            self.error_img = QLabel()
-            pixmap = QPixmap("visuals/error_image.png").scaled(200, 200, 1)
-            self.error_img.setPixmap(pixmap)
-            self.error_img.move(200, 200)
+            self.lst_reviews = QLabel()
+            pixmap = QPixmap("visuals/error_image.png").scaled(400, 400, 1)
+            self.lst_reviews.setPixmap(pixmap)
 
         self.title = "Look and Cook"
         self.left = 500
@@ -75,27 +72,12 @@ class Reviews(QDialog, QWidget):
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setWindowTitle(self.title)
 
-        # if type(self.lst_reviews) == QListWidget:
-        #     vbox = QVBoxLayout()
-        #     vbox.setContentsMargins(50, 50, 50, 70)
-        #
-        #     self.lst_reviews.setFixedSize(600, 490)
-        #     vbox.addWidget(self.lst_reviews, alignment=Qt.AlignCenter)
-        #
-        #     self.setLayout(vbox)
-        # else:
-        #     self.lst_reviews.move(200, 200)
+        vbox = QVBoxLayout()
+        vbox.setContentsMargins(50, 50, 50, 70)
 
-        # if self.recipe_id in self.all_reviews:
-        #     vbox = QVBoxLayout()
-        #     vbox.setContentsMargins(50, 50, 50, 70)
-        #
-        #     self.lst_reviews.setFixedSize(600, 490)
-        #     vbox.addWidget(self.lst_reviews, alignment=Qt.AlignCenter)
-        #
-        #     self.setLayout(vbox)
-        # else:
-        # self.error_img.move(200, 200)
+        vbox.addWidget(self.lst_reviews, alignment=Qt.AlignCenter)
+
+        self.setLayout(vbox)
 
         # Creates a back button
         back = QPushButton("Back", self)

@@ -1,7 +1,8 @@
-"""
+"""Look And Cook: Reviews Window (5)
+
 Description
 ===============================
-
+This Python module contains the visualization of the reviews of the recipe selected by the user.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, QPushButton, \
     QListWidget, QApplication
@@ -19,22 +20,23 @@ class Reviews(QDialog, QWidget):
         """
         super().__init__()
         self.previous_window = previous_window
+        self.recipe_id = recipe_id
 
         self.recipe_title = QLabel("Reviews for " + recipe_name, self)
-        self.recipe_title.setFont(QFont('Georgia', 15, QFont.Bold))
+        self.recipe_title.setFont(QFont('Tisa', 14, QFont.Bold))
         self.recipe_title.setStyleSheet('color: rgb(210, 146, 68)')
         self.recipe_title.setFixedSize(600, 40)
         self.recipe_title.move(50, 40)
 
-        all_reviews = data_reading.get_reviews(data_reading.REVIEWS_FILE)
+        self.all_reviews = data_reading.get_reviews(data_reading.REVIEWS_FILE)
 
-        if recipe_id in all_reviews:
-            reviews = all_reviews[recipe_id]
+        if recipe_id in self.all_reviews:
+            reviews = self.all_reviews[recipe_id]
 
             self.lst_reviews = QListWidget()
             for i in range(len(reviews)):
                 self.lst_reviews.insertItem(i, str(i + 1) + '. ' + reviews[i])
-            self.lst_reviews.setFont(QFont('Georgia', 10))
+            self.lst_reviews.setFont(QFont('Tisa', 10))
             self.lst_reviews.setStyleSheet('color: rgb(35, 87, 77)')
             self.lst_reviews.move(50, 200)
             self.lst_reviews.setWordWrap(True)
@@ -42,14 +44,19 @@ class Reviews(QDialog, QWidget):
         else:
             self.lbl_error = \
                 QLabel("We're sorry, but reviews for \n this recipe are unavailable.", self)
-            self.lbl_error.setFont(QFont('Georgia', 13, QFont.Bold))
+            self.lbl_error.setFont(QFont('Tisa', 13, QFont.Bold))
             self.lbl_error.setStyleSheet('color: rgb(211, 104, 80)')
             self.lbl_error.setFixedSize(600, 60)
             self.lbl_error.move(50, 615)
 
-            self.lst_reviews = QLabel()
-            pixmap = QPixmap("visuals/error_image.png").scaled(400, 400, 1)
-            self.lst_reviews.setPixmap(pixmap)
+            # self.lst_reviews = QLabel()
+            # pixmap = QPixmap("visuals/error_image.png").scaled(200, 200, 1)
+            # self.lst_reviews.setPixmap(pixmap)
+
+            self.error_img = QLabel()
+            pixmap = QPixmap("visuals/error_image.png").scaled(200, 200, 1)
+            self.error_img.setPixmap(pixmap)
+            self.error_img.move(200, 200)
 
         self.title = "Look and Cook"
         self.left = 500
@@ -68,19 +75,33 @@ class Reviews(QDialog, QWidget):
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setWindowTitle(self.title)
 
-        vbox = QVBoxLayout()
-        vbox.setContentsMargins(50, 50, 50, 70)
+        # if type(self.lst_reviews) == QListWidget:
+        #     vbox = QVBoxLayout()
+        #     vbox.setContentsMargins(50, 50, 50, 70)
+        #
+        #     self.lst_reviews.setFixedSize(600, 490)
+        #     vbox.addWidget(self.lst_reviews, alignment=Qt.AlignCenter)
+        #
+        #     self.setLayout(vbox)
+        # else:
+        #     self.lst_reviews.move(200, 200)
 
-        self.lst_reviews.setFixedSize(600, 490)
-        vbox.addWidget(self.lst_reviews, alignment=Qt.AlignCenter)
-
-        self.setLayout(vbox)
+        # if self.recipe_id in self.all_reviews:
+        #     vbox = QVBoxLayout()
+        #     vbox.setContentsMargins(50, 50, 50, 70)
+        #
+        #     self.lst_reviews.setFixedSize(600, 490)
+        #     vbox.addWidget(self.lst_reviews, alignment=Qt.AlignCenter)
+        #
+        #     self.setLayout(vbox)
+        # else:
+        # self.error_img.move(200, 200)
 
         # Creates a back button
         back = QPushButton("Back", self)
         back.setGeometry((self.width // 2) - 50, self.height // 2 + 200, 70, 70)
         back.move(610, self.height - 90)
-        back.setFont(QFont('Georgia', 10, QFont.Bold))
+        back.setFont(QFont('Tisa', 11, QFont.Bold))
         back.setStyleSheet("border-radius: 35; background-color: rgb(210, 146, 68); "
                            "color: rgb(240, 225, 204)")
         back.clicked.connect(self.go_back)

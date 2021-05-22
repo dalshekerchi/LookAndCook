@@ -30,7 +30,8 @@ REMOVE_INGREDIENTS1 = {'marinate', 'low fat', 'breakfast', 'england', ' 2', 'fry
                        's thick', 'y', 'chopped', 'drained and finely chopped', 'top round',
                        'julienned', 'cleaned', 'boil', 'calories', 'party', 'gluten', 'Filling',
                        't', 'or less Grenadine (', 'ground', 'casings removed', 'chili', 'snow',
-                       'chill'}
+                       'chill', 'Alcoholic', 'Acesulfame potassium sweetener'}
+
 REMOVE_INGREDIENTS2 = {'rinsed and torn', 'and dried', 'rating',
                        'peeled and cubed', 'split', 'for topping', 'warmed', '\x99'}
 

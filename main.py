@@ -1,18 +1,8 @@
-"""CSC111 Winter 2021 Project Phase 2: Final Submission, Main Program Window (1)
+"""Look And Cook: Main Program Window (1)
 
 Description
 ===============================
 This Python module contains the visualization of the main title program window.
-
-Copyright and Usage Information
-===============================
-This file is provided solely for the personal and private use of TAs and professors
-teaching CSC111 at the University of Toronto St. George campus. All forms of
-distribution of this code, whether as given or with any changes, are
-expressly prohibited. For more information on copyright for CSC111 materials,
-please consult our Course Syllabus.
-
-This file is Copyright (c) 2021 Dana Al Shekerchi, Nehchal Kalsi, Kathy Lee, and Audrey Yoshino.
 """
 from PyQt5.QtWidgets import QApplication, QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, \
     QPushButton
@@ -76,7 +66,7 @@ class MainWindow(QDialog, QWidget):
         btn_start.move((self.width // 2) - 50, self.height // 2 + 200)
         btn_start.setStyleSheet("border-radius: 50; background-color: rgb(210, 146, 68); "
                                 "color: rgb(240, 225, 204)")
-        btn_start.setFont(QFont('Georgia', 12, weight=QtGui.QFont.Bold))
+        btn_start.setFont(QFont('Tisa', 13, weight=QtGui.QFont.Bold))
         btn_start.clicked.connect(self.clicked)
 
         # Opens the window

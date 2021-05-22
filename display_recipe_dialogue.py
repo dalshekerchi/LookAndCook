@@ -1,10 +1,11 @@
-"""
+"""Look And Cook: Display Recipe Program Window (4)
+
 Description
 ===============================
-
+This Python module contains the visualization of the recipe display program window.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QWidget, QDesktopWidget, QLineEdit, \
-    QListWidget, QVBoxLayout, QPushButton, QApplication
+    QListWidget, QVBoxLayout, QHBoxLayout, QPushButton, QApplication
 from PyQt5.QtGui import QIcon, QFont, QImage, QPixmap
 from PyQt5.QtCore import Qt
 import data_reading
@@ -25,7 +26,7 @@ class IndividualRecipe(QDialog, QWidget):
         self.previous_window = previous_window
 
         self.recipe_title = QLabel(self.recipe_name, self)
-        self.recipe_title.setFont(QFont('Georgia', 15, QFont.Bold))
+        self.recipe_title.setFont(QFont('Tisa', 14, QFont.Bold))
         self.recipe_title.setStyleSheet('color: rgb(210, 146, 68)')
         self.recipe_title.setFixedSize(600, 40)
         self.recipe_title.move(50, 40)
@@ -40,66 +41,63 @@ class IndividualRecipe(QDialog, QWidget):
             if self.data[x][0] == self.recipe_name:
                 self.id = x
 
+        self.lbl_time_author = QLabel('Cook Time: ' + self.data[self.id][6] + '   |   Author: '
+                                      + self.data[self.id][3], self)
+        self.lbl_time_author.setFont(QFont('Tisa', 10))
+        self.lbl_time_author.setStyleSheet('color: rgb(35, 87, 77)')
+        self.lbl_time_author.setFixedSize(600, 40)
+        self.lbl_time_author.move(50, 75)
+
         all_ratings = data_reading.get_review_scores("data/clean_reviews.csv")
 
         if self.id in all_ratings:
             rating = all_ratings[self.id]
 
-            self.lbl_stars = QLabel(str(rating) + 'a' * round(rating), self)
-            self.lbl_stars.setFont(QFont('Georgia', 14, QFont.Bold))
+            self.lbl_stars = QLabel(str(rating) + '⭐' * round(rating), self)
+            self.lbl_stars.setFont(QFont('Tisa', 10, QFont.Bold))
             self.lbl_stars.setStyleSheet('color: rgb(211, 104, 80)')
-            self.lbl_stars.setFixedSize(600, 60)
-            self.lbl_stars.move(450, 30)
+            self.lbl_stars.setFixedSize(600, 40)
+            self.lbl_stars.move(50, 108)
 
         else:
-            self.lbl_stars = QLabel('Rating unavailable a', self)
-            self.lbl_stars.setFont(QFont('Georgia', 14, QFont.Bold))
+            self.lbl_stars = QLabel('Rating unavailable ⭐', self)
+            self.lbl_stars.setFont(QFont('Tisa', 10, QFont.Bold))
             self.lbl_stars.setStyleSheet('color: rgb(211, 104, 80)')
-            self.lbl_stars.setFixedSize(600, 60)
-            self.lbl_stars.move(420, 30)
-
-        self.lbl_time_author = QLabel('Cook Time: ' + self.data[self.id][6] + '   |   Author: '
-                                      + self.data[self.id][3], self)
-        self.lbl_time_author.setFont(QFont('Georgia', 10))
-        self.lbl_time_author.setStyleSheet('color: rgb(35, 87, 77)')
-        self.lbl_time_author.setFixedSize(600, 40)
-        self.lbl_time_author.move(50, 73)
+            self.lbl_stars.setFixedSize(600, 40)
+            self.lbl_stars.move(50, 108)
 
         url_image = self.data[self.id][2]
         image = QImage()
         image.loadFromData(requests.get(url_image).content)
 
         self.lbl_image = QLabel(self)
-        self.lbl_image.setPixmap(QPixmap(image))
-        self.lbl_image.move(600, 50)
+        self.lbl_image.setPixmap(QPixmap(image).scaled(300, 300, 2))
 
         self.lbl_ingredients = QLabel('Ingredients', self)
-        self.lbl_ingredients.setFont(QFont('Georgia', 12, QFont.Bold))
+        self.lbl_ingredients.setFont(QFont('Tisa', 12, QFont.Bold))
         self.lbl_ingredients.setStyleSheet('color: rgb(211, 104, 80)')
         self.lbl_ingredients.setFixedSize(600, 40)
-        self.lbl_ingredients.move(50, 120)
 
         self.lbl_direction = QLabel('Directions', self)
-        self.lbl_direction.setFont(QFont('Georgia', 12, QFont.Bold))
+        self.lbl_direction.setFont(QFont('Tisa', 12, QFont.Bold))
         self.lbl_direction.setStyleSheet('color: rgb(211, 104, 80)')
         self.lbl_direction.setFixedSize(600, 40)
-        self.lbl_direction.move(50, 380)
 
         self.ingredients_names = data_reading.get_ing_amounts("data/recipes.csv")[self.id]
 
         self.lst_ingredients = QListWidget()
         for i in range(len(self.ingredients_names)):
             self.lst_ingredients.insertItem(i, self.ingredients_names[i])
-        self.lst_ingredients.setFont(QFont('Georgia', 10))
+        self.lst_ingredients.setFont(QFont('Tisa', 10))
         self.lst_ingredients.setStyleSheet('color: rgb(35, 87, 77)')
+        self.lst_ingredients.setWordWrap(True)
 
         self.directions = list(self.data[self.id][8])
         self.lst_directions = QListWidget()
         for i in range(len(self.directions)):
             self.lst_directions.insertItem(i, str(i + 1) + '. ' + self.directions[i])
-        self.lst_directions.setFont(QFont('Georgia', 10))
+        self.lst_directions.setFont(QFont('Tisa', 10))
         self.lst_directions.setStyleSheet('color: rgb(35, 87, 77)')
-        self.lst_directions.move(50, 200)
         self.lst_directions.setWordWrap(True)
 
         self.title = "Look and Cook"
@@ -122,30 +120,39 @@ class IndividualRecipe(QDialog, QWidget):
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.setWindowTitle(self.title)
 
-        vbox = QVBoxLayout()
-        vbox.setContentsMargins(50, 100, 200, 30)
-        self.lst_ingredients.setFixedSize(600, 200)
-        vbox.addWidget(self.lst_ingredients)
+        vbox1 = QVBoxLayout()
+        vbox1.setContentsMargins(40, 150, 10, 30)
+        self.lst_ingredients.setFixedSize(285, 200)
+        vbox1.addWidget(self.lbl_image)
+        vbox1.addWidget(self.lbl_ingredients)
+        vbox1.addWidget(self.lst_ingredients)
 
-        self.lst_directions.setFixedSize(600, 200)
-        vbox.addWidget(self.lst_directions)
-        self.setLayout(vbox)
+        vbox2 = QVBoxLayout()
+        vbox2.setContentsMargins(10, 100, 50, 200)
+        self.lst_directions.setFixedSize(300, 497)
+        vbox2.addWidget(self.lbl_direction)
+        vbox2.addWidget(self.lst_directions)
+
+        hbox = QHBoxLayout()
+        hbox.addLayout(vbox1)
+        hbox.addLayout(vbox2)
+        self.setLayout(hbox)
 
         # Creates a back button
         back = QPushButton("Back", self)
-        back.setGeometry((self.width // 2) - 50, self.height // 2 + 200, 70, 70)
-        back.move(580, self.height - 110)
-        back.setFont(QFont('Georgia', 9, QFont.Bold))
-        back.setStyleSheet("border-radius: 35; background-color: rgb(210, 146, 68); "
+        back.setGeometry((self.width // 2) - 50, self.height // 2 + 200, 80, 30)
+        back.move(585, 10)
+        back.setFont(QFont('Tisa', 9, QFont.Bold))
+        back.setStyleSheet("border-radius: 15; background-color: rgb(210, 146, 68); "
                            "color: rgb(240, 225, 204)")
         back.clicked.connect(self.go_back)
 
         # Creates a button for reviews
         reviews = QPushButton("Reviews", self)
-        reviews.setGeometry((self.width // 2) - 50, self.height // 2 + 200, 70, 70)
-        reviews.move(280, self.height - 110)
-        reviews.setFont(QFont('Georgia', 9, QFont.Bold))
-        reviews.setStyleSheet("border-radius: 35; background-color: rgb(210, 146, 68); "
+        reviews.setGeometry((self.width // 2) - 50, self.height // 2 + 200, 80, 30)
+        reviews.move(495, 10)
+        reviews.setFont(QFont('Tisa', 9, QFont.Bold))
+        reviews.setStyleSheet("border-radius: 15; background-color: rgb(210, 146, 68); "
                               "color: rgb(240, 225, 204)")
         reviews.clicked.connect(self.reviews_window)
 

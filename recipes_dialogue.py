@@ -5,7 +5,8 @@ Description
 This Python module contains the visualization of the recipes search results program window.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, \
-    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QComboBox, QApplication
+    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QComboBox, QApplication, \
+    QListWidgetItem
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QIcon, QColor
 import data_reading
@@ -19,7 +20,7 @@ class RecipesDialogue(QDialog, QWidget):
     the user's input ingredients and specification a maximum time for recipes displayed.
     """
 
-    def __init__(self, user_ingredients: list, time: int, previous_window):
+    def __init__(self, user_ingredients: list, time: int, previous_window: QDesktopWidget):
         """Class representing third window of program which displays the recipes filtered by the
         ingredients inputted by the user.
         """
@@ -200,14 +201,14 @@ class RecipesDialogue(QDialog, QWidget):
             warning.setIcon(QMessageBox.Critical)
             warning.exec_()
         else:
-            QApplication.setOverrideCursor(Qt.WaitCursor)
+            # QApplication.setOverrideCursor(Qt.WaitCursor)
+            self.hide()
             self.color_change[self.recipe_of_choice.text()] = True
             self.update_visited()
 
             self.display_recipe_dialogue = IndividualRecipe(self.recipe_of_choice.text(), self)
-            self.hide()
             self.display_recipe_dialogue.show()
-            QApplication.restoreOverrideCursor()
+            # QApplication.restoreOverrideCursor()
 
     def update_combo_option(self, index) -> None:
         """Update the options in the dependent combo-box."""
@@ -239,7 +240,7 @@ class RecipesDialogue(QDialog, QWidget):
                 self.recipe_list.insertItem(i, self.recipe_names[i])
             self.update_visited()
 
-    def reorder_recipes_combo_option(self, index) -> None:
+    def reorder_recipes_combo_option(self, index: int) -> None:
         """Reorder the recipes based on the option selected in the combo_option combo-box."""
         if index == 0:  # ascending
             self.recipe_list.clear()
@@ -265,7 +266,7 @@ class RecipesDialogue(QDialog, QWidget):
         """Clears the recipe in the input field."""
         self.recipe_of_choice.clear()
 
-    def input_recipe(self, item) -> None:
+    def input_recipe(self, item: QListWidgetItem) -> None:
         """Input the double clicked recipe in the search field."""
         self.recipe_of_choice.setText(item.text())
 

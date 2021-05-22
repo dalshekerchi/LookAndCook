@@ -15,7 +15,7 @@ class Reviews(QDialog, QWidget):
     """Class representing fifth window of program which displays reviews of a recipe as selected
     by the user in the third window."""
 
-    def __init__(self, recipe_id: str, recipe_name: str, previous_window) -> None:
+    def __init__(self, recipe_id: str, recipe_name: str, previous_window: QDesktopWidget) -> None:
         """Initialize an instance of the Reviews window.
         """
         super().__init__()
@@ -28,10 +28,10 @@ class Reviews(QDialog, QWidget):
         self.recipe_title.setFixedSize(600, 40)
         self.recipe_title.move(50, 40)
 
-        self.all_reviews = data_reading.get_reviews(data_reading.REVIEWS_FILE)
+        all_reviews = data_reading.get_reviews(data_reading.REVIEWS_FILE)
 
-        if recipe_id in self.all_reviews:
-            reviews = self.all_reviews[recipe_id]
+        if recipe_id in all_reviews:
+            reviews = all_reviews[recipe_id]
 
             self.lst_reviews = QListWidget()
             for i in range(len(reviews)):
@@ -46,13 +46,13 @@ class Reviews(QDialog, QWidget):
         else:
             self.lbl_error = \
                 QLabel("We're sorry, but reviews for \n this recipe are unavailable.", self)
-            self.lbl_error.setFont(QFont('Tisa', 13, QFont.Bold))
+            self.lbl_error.setFont(QFont('Tisa', 15, QFont.Bold))
             self.lbl_error.setStyleSheet('color: rgb(211, 104, 80)')
             self.lbl_error.setFixedSize(600, 60)
-            self.lbl_error.move(50, 615)
+            self.lbl_error.move(180, 550)
 
             self.lst_reviews = QLabel()
-            pixmap = QPixmap("visuals/error_image.png").scaled(400, 400, 1)
+            pixmap = QPixmap("visuals/error_image.png").scaled(350, 350, 1)
             self.lst_reviews.setPixmap(pixmap)
 
         self.title = "Look and Cook"

@@ -5,7 +5,7 @@ Description
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, \
     QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QSpinBox, QApplication, \
-    QGraphicsColorizeEffect
+    QGraphicsColorizeEffect, QListWidgetItem
 from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
 from PyQt5.QtGui import QIcon, QFont, QColor
@@ -284,7 +284,7 @@ class IngredientsDialogue(QDialog, QWidget):
                 x.setDisabled(True)
         self.time_selected.setValue(0)
 
-    def add_ingredient(self, item) -> None:
+    def add_ingredient(self, item: QListWidgetItem) -> None:
         """Add the double clicked ingredient to the ingredients list."""
         for x in self.ingredient:
             if x.isEnabled() and x.text() == '':
@@ -330,7 +330,7 @@ class IngredientsDialogue(QDialog, QWidget):
             contains_duplicates.setIcon(QMessageBox.Critical)
             x = contains_duplicates.exec_()
 
-        elif any([x.isEnabled() and x.text() == '' for x in
+        elif any([y.isEnabled() and y.text() == '' for y in
                   self.ingredient]):  # Checks if there are any empty textboxes
             warning = QMessageBox()
             warning.setWindowTitle("Error!")
@@ -340,8 +340,8 @@ class IngredientsDialogue(QDialog, QWidget):
             warning.setIcon(QMessageBox.Critical)
             x = warning.exec_()
 
-        elif not all([x.text() in self.clean for x in self.ingredient if
-                      x.isEnabled()]):  # Checks if there are any  items that are not valid
+        elif not all([z.text() in self.clean for z in self.ingredient if
+                      z.isEnabled()]):  # Checks if there are any  items that are not valid
             invalid_ingredient = ''
             count = 0
             for x in self.ingredient:
@@ -363,12 +363,12 @@ class IngredientsDialogue(QDialog, QWidget):
             x = invalid.exec_()
 
         else:  # If everything is correct
+            self.hide()
             QApplication.setOverrideCursor(Qt.WaitCursor)
-            user_input = [x.text() for x in self.ingredient if x.isEnabled()]
+            user_input = [u.text() for u in self.ingredient if u.isEnabled()]
 
             # Goes to the next dialogue
             self.recipes_dialogue = \
                 RecipesDialogue(user_input, int(self.time_selected.text()), self)
-            self.hide()
             self.recipes_dialogue.show()
             QApplication.restoreOverrideCursor()

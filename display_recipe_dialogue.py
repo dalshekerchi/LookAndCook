@@ -8,16 +8,16 @@ from PyQt5.QtWidgets import QLabel, QDialog, QWidget, QDesktopWidget, QLineEdit,
     QListWidget, QVBoxLayout, QHBoxLayout, QPushButton, QApplication
 from PyQt5.QtGui import QIcon, QFont, QImage, QPixmap
 from PyQt5.QtCore import Qt
+import requests
 import data_reading
 from reviews_dialogue import Reviews
-import requests
 
 
 class IndividualRecipe(QDialog, QWidget):
     """Class representing fourth window of program which displays a single recipe as selected
     by the user in the third window."""
 
-    def __init__(self, recipe_name: str, previous_window) -> None:
+    def __init__(self, recipe_name: str, previous_window: QDesktopWidget) -> None:
         """Initialize an instance of the IndividualRecipe window.
         """
         super().__init__()
@@ -169,11 +169,11 @@ class IndividualRecipe(QDialog, QWidget):
     def reviews_window(self) -> None:
         """Display the reviews for the selected recipe in a new window.
         """
-        QApplication.setOverrideCursor(Qt.WaitCursor)
-        self.display_reviews_dialogue = Reviews(self.id, self.recipe_name, self)
+        # QApplication.setOverrideCursor(Qt.WaitCursor)
         self.hide()
+        self.display_reviews_dialogue = Reviews(self.id, self.recipe_name, self)
         self.display_reviews_dialogue.show()
-        QApplication.restoreOverrideCursor()
+        # QApplication.restoreOverrideCursor()
 
     def go_back(self) -> None:
         """Take the user to the previous window.

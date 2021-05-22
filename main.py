@@ -11,6 +11,7 @@ import sys
 from PyQt5 import QtGui
 from PyQt5.QtGui import QPixmap, QIcon, QFont
 from ingredients_dialogue import IngredientsDialogue
+from typing import Union
 
 
 class MainWindow(QDialog, QWidget):
@@ -18,6 +19,13 @@ class MainWindow(QDialog, QWidget):
 
     Contains the logo, start button, and code to handle a click event.
     """
+    title: str
+    left: int
+    top: int
+    width: int
+    height: int
+    ingredients_dialogue: Union[None, IngredientsDialogue]
+
     def __init__(self) -> None:
         """Initialize an instance of MainWindow.
         """
@@ -76,10 +84,10 @@ class MainWindow(QDialog, QWidget):
         """Link the start button to the second window displaying ingredient choices.
         """
         QApplication.setOverrideCursor(Qt.WaitCursor)
+        self.hide()
         if self.ingredients_dialogue is None:
             self.ingredients_dialogue = IngredientsDialogue()
-            self.hide()
-        self.ingredients_dialogue.show()
+            self.ingredients_dialogue.show()
         QApplication.restoreOverrideCursor()
 
 
@@ -87,18 +95,3 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     main = MainWindow()
     sys.exit(app.exec_())
-
-if __name__ == '__main__':
-    # import python_ta.contracts
-    # python_ta.contracts.check_all_contracts()
-
-    import doctest
-    doctest.testmod()
-
-    import python_ta
-    python_ta.check_all(config={
-        'max-line-length': 100,
-        'disable': ['E1136'],
-        'extra-imports': ['data_type'],
-        'max-nested-blocks': 4
-    })

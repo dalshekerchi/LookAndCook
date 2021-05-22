@@ -7,8 +7,8 @@ from typing import Dict, List
 import data_type
 
 
-def ingredients_sort(data: Dict[str, list], user_ingredients: list, graph: data_type.Graph) -> List[
-    tuple]:
+def ingredients_sort(data: Dict[str, list], user_ingredients: list, graph: data_type.Graph) -> \
+        List[tuple]:
     """Return a list of tuples containing the recipe ids and other attributes of recipes
      from data sorted in decreasing order of number of ingredients used from user_ingrdnts.
 

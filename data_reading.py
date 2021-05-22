@@ -62,14 +62,14 @@ def read_recipes(file: str) -> Dict[str, list]:
 
                 elif index == 7:  # ingredients
                     ingredients = inner_row.split(',')
-                    cleaned_ing = [x.strip() for x in ingredients]
+                    cleaned_ing = [y.strip() for y in ingredients]
                     dict_val.append(set(cleaned_ing))
 
                 elif index == 8:    # directions
-                    sntnc = row[8].strip("'")
-                    if not sntnc[-2:] == "**":
-                        sntnc = sntnc + "**"    # to split every bullet point
-                    directions = list(sntnc.split('**'))[:-1]
+                    sentence = row[8].strip("'")
+                    if not sentence[-2:] == "**":
+                        sentence = sentence + "**"    # to split every bullet point
+                    directions = list(sentence.split('**'))[:-1]
 
                     for x in directions:
                         if "''" in x:

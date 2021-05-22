@@ -149,4 +149,3 @@ def load_graph(recipes_file: str) -> Graph:
             graph.add_edge(recipe, ingredient.strip())
 
     return graph
-

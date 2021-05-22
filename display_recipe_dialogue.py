@@ -171,14 +171,14 @@ class IndividualRecipe(QDialog, QWidget):
         """
         QApplication.setOverrideCursor(Qt.WaitCursor)
         self.display_reviews_dialogue = Reviews(self.id, self.recipe_name, self)
-        self.display_reviews_dialogue.show()
         self.hide()
+        self.display_reviews_dialogue.show()
         QApplication.restoreOverrideCursor()
 
     def go_back(self) -> None:
         """Take the user to the previous window.
         """
         QApplication.setOverrideCursor(Qt.WaitCursor)
-        self.previous_window.show()
         self.hide()
+        self.previous_window.show()
         QApplication.restoreOverrideCursor()

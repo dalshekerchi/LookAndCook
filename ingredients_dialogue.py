@@ -369,6 +369,6 @@ class IngredientsDialogue(QDialog, QWidget):
             # Goes to the next dialogue
             self.recipes_dialogue = \
                 RecipesDialogue(user_input, int(self.time_selected.text()), self)
-            self.recipes_dialogue.show()
             self.hide()
+            self.recipes_dialogue.show()
             QApplication.restoreOverrideCursor()

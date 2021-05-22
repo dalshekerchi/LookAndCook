@@ -205,8 +205,8 @@ class RecipesDialogue(QDialog, QWidget):
             self.update_visited()
 
             self.display_recipe_dialogue = IndividualRecipe(self.recipe_of_choice.text(), self)
-            self.display_recipe_dialogue.show()
             self.hide()
+            self.display_recipe_dialogue.show()
             QApplication.restoreOverrideCursor()
 
     def update_combo_option(self, index) -> None:
@@ -273,6 +273,6 @@ class RecipesDialogue(QDialog, QWidget):
         """Take the user to the previous window.
         """
         QApplication.setOverrideCursor(Qt.WaitCursor)
-        self.previous_window.show()
         self.hide()
+        self.previous_window.show()
         QApplication.restoreOverrideCursor()

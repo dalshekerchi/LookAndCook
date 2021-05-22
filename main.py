@@ -78,8 +78,8 @@ class MainWindow(QDialog, QWidget):
         QApplication.setOverrideCursor(Qt.WaitCursor)
         if self.ingredients_dialogue is None:
             self.ingredients_dialogue = IngredientsDialogue()
-            self.ingredients_dialogue.show()
-        self.hide()
+            self.hide()
+        self.ingredients_dialogue.show()
         QApplication.restoreOverrideCursor()
 
 

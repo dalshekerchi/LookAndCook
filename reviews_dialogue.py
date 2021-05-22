@@ -102,6 +102,6 @@ class Reviews(QDialog, QWidget):
         """Take the user to the previous window.
         """
         QApplication.setOverrideCursor(Qt.WaitCursor)
-        self.previous_window.show()
         self.hide()
+        self.previous_window.show()
         QApplication.restoreOverrideCursor()

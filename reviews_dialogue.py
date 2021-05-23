@@ -5,7 +5,7 @@ Description
 This Python module contains the visualization of the reviews of the recipe selected by the user.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, QPushButton, \
-    QListWidget, QApplication
+    QListWidget
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QIcon, QPixmap
 import data_reading
@@ -101,7 +101,5 @@ class Reviews(QDialog, QWidget):
     def go_back(self) -> None:
         """Take the user to the previous window.
         """
-        QApplication.setOverrideCursor(Qt.WaitCursor)
         self.hide()
         self.previous_window.show()
-        QApplication.restoreOverrideCursor()

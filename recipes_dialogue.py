@@ -5,8 +5,8 @@ Description
 This Python module contains the visualization of the recipes search results program window.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, \
-    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QComboBox, QApplication, \
-    QListWidgetItem
+    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QComboBox, QListWidgetItem, \
+    QApplication
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QIcon, QColor
 import data_reading
@@ -103,7 +103,7 @@ class RecipesDialogue(QDialog, QWidget):
         self.color_change = {x: False for x in self.recipe_names}
 
         # Sets up the screen with all the needed elements
-        self.title = "Look and Cook - Recipe Results"
+        self.title = "Look and Cook"
         self.left = 500
         self.top = 200
         self.width = 700
@@ -181,10 +181,15 @@ class RecipesDialogue(QDialog, QWidget):
     def center(self) -> None:
         """Function to center third window on the provided desktop screen.
         """
-        qr = self.frameGeometry()
-        cp = QDesktopWidget().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
+        # qr = self.frameGeometry()
+        # cp = QDesktopWidget().availableGeometry().center()
+        # qr.moveCenter(cp)
+        # self.move(qr.topLeft())
+        frameGm = self.frameGeometry()
+        screen = QApplication.desktop().screenNumber(QApplication.desktop().cursor().pos())
+        centerPoint = QApplication.desktop().screenGeometry(screen).center()
+        frameGm.moveCenter(centerPoint)
+        self.move(frameGm.topLeft())
 
     def chosen(self) -> None:
         """Select the chosen recipe and display it on the fourth page.
@@ -201,14 +206,12 @@ class RecipesDialogue(QDialog, QWidget):
             warning.setIcon(QMessageBox.Critical)
             warning.exec_()
         else:
-            # QApplication.setOverrideCursor(Qt.WaitCursor)
             self.hide()
             self.color_change[self.recipe_of_choice.text()] = True
             self.update_visited()
 
             self.display_recipe_dialogue = IndividualRecipe(self.recipe_of_choice.text(), self)
             self.display_recipe_dialogue.show()
-            # QApplication.restoreOverrideCursor()
 
     def update_combo_option(self, index) -> None:
         """Update the options in the dependent combo-box."""
@@ -273,7 +276,5 @@ class RecipesDialogue(QDialog, QWidget):
     def go_back(self) -> None:
         """Take the user to the previous window.
         """
-        QApplication.setOverrideCursor(Qt.WaitCursor)
         self.hide()
         self.previous_window.show()
-        QApplication.restoreOverrideCursor()

@@ -2,12 +2,13 @@
 
 Description
 ===============================
-This Python module contains the visualization of the recipe display program window.
+This Python module contains the visualization of the recipe display program window. This window is
+where the user could view details about the recipe they chose including ingredients, directions,
+rating, cooking time and an image.
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QWidget, QDesktopWidget, QLineEdit, \
     QListWidget, QVBoxLayout, QHBoxLayout, QPushButton, QApplication
 from PyQt5.QtGui import QIcon, QFont, QImage, QPixmap
-from PyQt5.QtCore import Qt
 import requests
 import data_reading
 from reviews_dialogue import Reviews
@@ -169,16 +170,12 @@ class IndividualRecipe(QDialog, QWidget):
     def reviews_window(self) -> None:
         """Display the reviews for the selected recipe in a new window.
         """
-        # QApplication.setOverrideCursor(Qt.WaitCursor)
         self.hide()
         self.display_reviews_dialogue = Reviews(self.id, self.recipe_name, self)
         self.display_reviews_dialogue.show()
-        # QApplication.restoreOverrideCursor()
 
     def go_back(self) -> None:
         """Take the user to the previous window.
         """
-        QApplication.setOverrideCursor(Qt.WaitCursor)
         self.hide()
         self.previous_window.show()
-        QApplication.restoreOverrideCursor()

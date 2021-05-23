@@ -4,8 +4,8 @@ Description
 
 """
 from PyQt5.QtWidgets import QLabel, QDialog, QVBoxLayout, QWidget, QDesktopWidget, \
-    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QSpinBox, QApplication, \
-    QGraphicsColorizeEffect, QListWidgetItem
+    QPushButton, QCompleter, QLineEdit, QListWidget, QMessageBox, QSpinBox, \
+    QGraphicsColorizeEffect, QListWidgetItem, QApplication
 from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
 from PyQt5.QtGui import QIcon, QFont, QColor
@@ -166,7 +166,7 @@ class IngredientsDialogue(QDialog, QWidget):
             self.all_ingredients.insertItem(i, self.clean[i])
 
         # Sets up the screen with all the needed elements
-        self.title = "Look and Cook - Ingredients Selection"
+        self.title = "Look and Cook"
         self.left = 500
         self.top = 200
         self.width = 700
@@ -258,6 +258,16 @@ class IngredientsDialogue(QDialog, QWidget):
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
+
+        # frameGm = self.frameGeometry()
+        # screen = QApplication.desktop().screenNumber(QApplication.desktop().cursor().pos())
+        # centerPoint = QApplication.desktop().screenGeometry(screen).center()
+        # frameGm.moveCenter(centerPoint)
+        # self.move(frameGm.topLeft())
+
+        resolution = QDesktopWidget().screenGeometry()
+        self.move((resolution.width() / 2) - (self.frameSize().width() / 2),
+                  (resolution.height() / 2) - (self.frameSize().height() / 2))
 
     def add_item(self) -> None:
         """Enables search box for user to input a new ingredient."""
@@ -364,11 +374,9 @@ class IngredientsDialogue(QDialog, QWidget):
 
         else:  # If everything is correct
             self.hide()
-            QApplication.setOverrideCursor(Qt.WaitCursor)
             user_input = [u.text() for u in self.ingredient if u.isEnabled()]
 
             # Goes to the next dialogue
             self.recipes_dialogue = \
                 RecipesDialogue(user_input, int(self.time_selected.text()), self)
             self.recipes_dialogue.show()
-            QApplication.restoreOverrideCursor()

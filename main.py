@@ -48,10 +48,21 @@ class MainWindow(QDialog, QWidget):
         """Center MainWindow on the provided desktop screen.
        """
         # Creates a window in the center of the screen using the screen size
-        frame = self.frameGeometry()
-        window = QDesktopWidget().availableGeometry().center()
-        frame.moveCenter(window)
-        self.move(frame.topLeft())
+        # frame = self.frameGeometry()
+        # window = QDesktopWidget().availableGeometry().center()
+        # frame.moveCenter(window)
+        # # self.move(frame.topLeft())
+
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
+        # frameGm = self.frameGeometry()
+        # screen = QApplication.desktop().screenNumber(QApplication.desktop().cursor().pos())
+        # centerPoint = QApplication.desktop().screenGeometry(screen).center()
+        # frameGm.moveCenter(centerPoint)
+        # self.move(frameGm.topLeft())
 
     def init_window(self) -> None:
         """Open the main window on the user's screen with the provided dimensions.
@@ -83,12 +94,10 @@ class MainWindow(QDialog, QWidget):
     def clicked(self) -> None:
         """Link the start button to the second window displaying ingredient choices.
         """
-        QApplication.setOverrideCursor(Qt.WaitCursor)
         self.hide()
         if self.ingredients_dialogue is None:
             self.ingredients_dialogue = IngredientsDialogue()
             self.ingredients_dialogue.show()
-        QApplication.restoreOverrideCursor()
 
 
 if __name__ == "__main__":

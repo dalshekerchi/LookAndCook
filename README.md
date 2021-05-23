@@ -1,5 +1,5 @@
 # LookAndCook
-LookAndCook is a GUI application developed using python that allows users to input ingredients and cooking time to display relevant recipes that meet their criteria extracted from a multitude of well-known cooking sites. Once the user chooses their recipe, the recipe details, such as ingredients, directions, ratings and cooking time, are presented.
+LookAndCook is a GUI application developed using Python that allows users to input ingredients and cooking time to display relevant recipes that meet their criteria extracted from a multitude of well-known cooking sites. Once the user chooses their recipe, the recipe details, such as ingredients, directions, ratings and cooking time, are presented.
 
 LookAndCook also uses the PyQt5 library to create a user-friendly interface that allows users to navigate the windows easily.
 
